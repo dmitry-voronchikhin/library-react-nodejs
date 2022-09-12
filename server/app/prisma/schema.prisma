@@ -10,30 +10,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Таблица для хранения refresh токенов
+model Token {
+  id           String @id @default(uuid()) /// Уникальный идентификатор
+  refreshToken String /// Refresh токен для обновления токена доступа
+  User         User   @relation(fields: [userId], references: [id])
+  userId       String @unique /// Идентификатор пользователя
+}
+
+/// Таблица для хранения всех пользователей системы
 model User {
-  id       String @id @default(uuid())
-  email    String @unique
-  password String
+  id       String  @id @default(uuid()) /// Уникальный идентификатор
+  email    String  @unique /// Почта регистрации пользователя
+  password String /// Пароль пользователя
+  Token    Token[] /// Список refresh токенов пользователя
 }
 
+/// Таблица для хранения всех книг в библиотеке
 model Book {
-  id                String          @id @default(uuid())
-  name              String
-  author            String
+  id                String          @id @default(uuid()) /// Уникальный идентификатор
+  name              String /// Наименование книги
+  author            String /// Автор книги
   publishingHouse   PublishingHouse @relation(fields: [publishingHouseId], references: [id])
-  publishingHouseId String
+  publishingHouseId String /// Издательство книги
 }
 
+/// Таблица для хранения всех издательств, использющихся в библиотечных книгах
 model PublishingHouse {
-  id      String @id @default(uuid())
-  name    String
-  address String
+  id      String @id @default(uuid()) /// Уникальный идентификатор
+  name    String /// Наименование издательства
+  address String /// Адрес местонахождения
   Book    Book[]
 }
 
+/// Таблица для хранения читателей книг в библиотеке
 model Reader {
-  id        String   @id @default(uuid())
-  name      String
-  birthDate DateTime
-  address   String
+  id        String   @id @default(uuid()) /// Уникальный идентификатор
+  name      String /// ФИО читателя
+  birthDate DateTime /// Дата рождения
+  address   String /// Адрес читателя
 }
