@@ -27,7 +27,7 @@ class UserController {
       const activationLink = req.params.link;
       await userService.activate(activationLink);
 
-      res.redirect(process.env.API_HOST);
+      res.redirect(process.env.CLIENT_URL);
     } catch (e) {
       console.log(e);
       res.status(400).json({

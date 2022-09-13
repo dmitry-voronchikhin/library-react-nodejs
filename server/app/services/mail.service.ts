@@ -20,6 +20,9 @@ class MailService {
   }
 
   async sendActivationMail(to: string, link: string) {
+    const linkParts = link.split("/");
+    const linkLabel = linkParts[linkParts.length - 1];
+
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
@@ -28,7 +31,7 @@ class MailService {
         <div>
           <h1>Активация учетной записи ${to}</h1>
           <h2 style="margin-top: 5px;">Для активации аккаунта перейдите по ссылке:</h2>
-          <a href={${link}}>${link}</a>
+          <a href="${link}">${linkLabel}</a>
         </div>
       `,
     });

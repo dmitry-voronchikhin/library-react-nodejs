@@ -35,10 +35,8 @@ class UserService {
       },
     });
 
-    await mailService.sendActivationMail(
-      email,
-      `${process.env.API_HOST}/api/activate/${activationLink}`
-    );
+    const accountActivationLink = `${process.env.API_HOST}/user/activate/${activationLink}`;
+    await mailService.sendActivationMail(email, accountActivationLink);
 
     const userDto = new UserDto(newUser);
     const tokens = tokenService.generateTokens({ ...userDto });
