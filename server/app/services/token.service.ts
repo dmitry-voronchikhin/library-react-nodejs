@@ -1,4 +1,6 @@
+import { Token } from ".prisma/client";
 import jwt from "jsonwebtoken";
+
 import { prisma } from "../prisma";
 
 class TokenService {
@@ -31,8 +33,10 @@ class TokenService {
       },
     });
 
+    let token: Token;
+
     if (currentToken) {
-      prisma.token.update({
+      token = await prisma.token.update({
         where: {
           userId,
         },
@@ -40,14 +44,14 @@ class TokenService {
           refreshToken,
         },
       });
+    } else {
+      token = await prisma.token.create({
+        data: {
+          userId,
+          refreshToken,
+        },
+      });
     }
-
-    const token = prisma.token.create({
-      data: {
-        userId,
-        refreshToken,
-      },
-    });
 
     return token;
   }

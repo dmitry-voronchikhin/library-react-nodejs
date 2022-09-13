@@ -7,12 +7,27 @@ class UserController {
     try {
       const { email, password } = req.body;
       const userData = await userService.registration(email, password);
+
       res.cookie("refreshToken", userData.refreshToken, {
         maxAge: COOKIE_MAX_AGE,
         httpOnly: true,
       });
 
       return res.status(200).json(userData);
+    } catch (e) {
+      console.log(e);
+      res.status(400).json({
+        error: e,
+      });
+    }
+  }
+
+  async activate(req: any, res: any) {
+    try {
+      const activationLink = req.params.link;
+      await userService.activate(activationLink);
+
+      res.redirect(process.env.API_HOST);
     } catch (e) {
       console.log(e);
       res.status(400).json({

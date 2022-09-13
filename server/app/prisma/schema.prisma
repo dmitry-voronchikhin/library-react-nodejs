@@ -18,12 +18,21 @@ model Token {
   userId       String @unique /// Идентификатор пользователя
 }
 
+model Activation {
+  id             String  @id @default(uuid()) /// Уникальный идентификатор
+  activationLink String? /// Ссылка на активацию аккаунта
+  isActivate     Boolean @default(false) /// Флаг, показываеющий, активирован ли аккаунт
+  User           User[]
+}
+
 /// Таблица для хранения всех пользователей системы
 model User {
-  id       String  @id @default(uuid()) /// Уникальный идентификатор
-  email    String  @unique /// Почта регистрации пользователя
-  password String /// Пароль пользователя
-  Token    Token[] /// Список refresh токенов пользователя
+  id           String     @id @default(uuid()) /// Уникальный идентификатор
+  email        String     @unique /// Почта регистрации пользователя
+  password     String /// Пароль пользователя
+  Token        Token[] /// Список refresh токенов пользователя
+  Activation   Activation @relation(fields: [activationId], references: [id])
+  activationId String
 }
 
 /// Таблица для хранения всех книг в библиотеке

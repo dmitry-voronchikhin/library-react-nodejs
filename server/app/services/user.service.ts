@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
+import { v4 as uuid } from "uuid";
 
 import { tokenService } from "./token.service";
+import { mailService } from "./mail.service";
 import { prisma } from "../prisma";
 import { UserDto } from "../dto/user.dto";
 
@@ -17,13 +19,26 @@ class UserService {
     }
 
     const hashPassword = await bcrypt.hash(password, 5);
+    const activationLink = uuid();
 
+    const activation = await prisma.activation.create({
+      data: {
+        activationLink,
+        isActivate: false,
+      },
+    });
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashPassword,
+        activationId: activation.id,
       },
     });
+
+    await mailService.sendActivationMail(
+      email,
+      `${process.env.API_HOST}/api/activate/${activationLink}`
+    );
 
     const userDto = new UserDto(newUser);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -33,6 +48,36 @@ class UserService {
       ...tokens,
       user: userDto,
     };
+  }
+
+  async activate(activationLink: string) {
+    const activation = await prisma.activation.findFirst({
+      where: {
+        activationLink,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    const user = await prisma.user.findFirst({
+      where: {
+        activationId: activation?.id,
+      },
+    });
+
+    if (!user) {
+      throw new Error("Ссылка на активацию недействительна");
+    }
+
+    await prisma.activation.update({
+      where: {
+        id: activation?.id,
+      },
+      data: {
+        isActivate: true,
+      },
+    });
   }
 }
 
