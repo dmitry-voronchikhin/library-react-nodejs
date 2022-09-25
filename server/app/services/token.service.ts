@@ -80,6 +80,32 @@ class TokenService {
       },
     });
   }
+
+  async validateAccessToken(token: string) {
+    try {
+      const isTokenValid = jwt.verify(token, this.JWT_ACCESS_SECRET);
+      return isTokenValid;
+    } catch {
+      return null;
+    }
+  }
+
+  async validateRefreshToken(token: string) {
+    try {
+      const isTokenValid = jwt.verify(token, this.JWT_REFRESH_SECRET);
+      return isTokenValid;
+    } catch {
+      return null;
+    }
+  }
+
+  async checkToken(refreshToken: string) {
+    return await prisma.token.findFirst({
+      where: {
+        refreshToken,
+      },
+    });
+  }
 }
 
 export const tokenService = new TokenService();

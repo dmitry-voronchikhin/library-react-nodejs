@@ -74,6 +74,25 @@ class UserController {
       });
     }
   }
+
+  async refresh(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.cookies;
+      const userData = await userService.refresh(refreshToken);
+
+      res.cookie("refreshToken", userData.refreshToken, {
+        maxAge: COOKIE_MAX_AGE,
+        httpOnly: true,
+      });
+
+      return res.status(200).json(userData);
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({
+        error: e,
+      });
+    }
+  }
 }
 
 export const userController = new UserController();

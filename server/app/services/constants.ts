@@ -3,6 +3,7 @@ export const USER_NOT_FOUND_ERROR = "Пользователь не найден"
 export const PASSWORD_ERROR = "Неверный пароль";
 export const USER_ALREADY_EXIST_ERROR =
   "Пользователь с таким email уже существует";
+export const UNAUTHORIZED_ERROR = "Пользователь не авторизован";
 
 export const ACCESS_TOKEN_EXPIRIES_IN = "15m";
 export const REFRESH_TOKEN_EXPIRIES_IN = "30d";

@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 import {
   ACTIVATION_LINK_ERROR,
   PASSWORD_ERROR,
+  UNAUTHORIZED_ERROR,
   USER_ALREADY_EXIST_ERROR,
   USER_NOT_FOUND_ERROR,
 } from "./constants";
@@ -120,6 +121,39 @@ class UserService {
 
   async logout(refreshToken: string): Promise<void> {
     await tokenService.removeToken(refreshToken);
+  }
+
+  async refresh(refreshToken: string) {
+    if (!refreshToken) {
+      throw new Error(UNAUTHORIZED_ERROR);
+    }
+
+    const isRefreshTokenValid = await tokenService.validateRefreshToken(
+      refreshToken
+    );
+    const existedRefreshToken = await tokenService.checkToken(refreshToken);
+
+    if (!isRefreshTokenValid || !existedRefreshToken) {
+      throw new Error(UNAUTHORIZED_ERROR);
+    }
+
+    const currentUser = await prisma.user.findUnique({
+      where: {
+        id: existedRefreshToken.userId,
+      },
+    });
+
+    if (!currentUser) {
+      throw new Error(UNAUTHORIZED_ERROR);
+    }
+
+    const userDto = new UserDto(currentUser);
+    const tokens = this.generateAndSaveTokens(userDto);
+
+    return {
+      ...tokens,
+      user: userDto,
+    };
   }
 }
 
