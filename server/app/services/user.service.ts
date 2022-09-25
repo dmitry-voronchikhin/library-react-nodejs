@@ -117,6 +117,10 @@ class UserService {
       user: userDto,
     };
   }
+
+  async logout(refreshToken: string): Promise<void> {
+    await tokenService.removeToken(refreshToken);
+  }
 }
 
 export const userService = new UserService();

@@ -72,6 +72,14 @@ class TokenService {
 
     return token;
   }
+
+  async removeToken(refreshToken: string) {
+    await prisma.token.deleteMany({
+      where: {
+        refreshToken,
+      },
+    });
+  }
 }
 
 export const tokenService = new TokenService();

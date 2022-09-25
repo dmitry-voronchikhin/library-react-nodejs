@@ -58,6 +58,22 @@ class UserController {
       });
     }
   }
+
+  async logout(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.cookies;
+      await userService.logout(refreshToken);
+
+      res.clearCookie("refreshToken");
+
+      return res.status(200).end();
+    } catch (e) {
+      console.error(e);
+      return res.status(500).json({
+        error: e,
+      });
+    }
+  }
 }
 
 export const userController = new UserController();
