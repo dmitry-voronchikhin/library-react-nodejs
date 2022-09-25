@@ -1,6 +1,6 @@
-import { Token } from ".prisma/client";
 import jwt from "jsonwebtoken";
 
+import { Token } from ".prisma/client";
 import { prisma } from "../prisma";
 
 class TokenService {
@@ -27,18 +27,28 @@ class TokenService {
   }
 
   async saveToken(userId: string, refreshToken: string) {
-    const currentToken = await prisma.token.findFirst({
+    const currentUser = await prisma.user.findUnique({
       where: {
-        userId,
+        id: userId,
+      },
+      select: {
+        token: true,
+        id: true,
       },
     });
 
+    if (!currentUser) {
+      throw new Error(
+        "При сохранении токена произошла ошибка. Пользователь не найден"
+      );
+    }
+
     let token: Token;
 
-    if (currentToken) {
+    if (currentUser.token) {
       token = await prisma.token.update({
         where: {
-          userId,
+          id: currentUser.token.id,
         },
         data: {
           refreshToken,
@@ -47,8 +57,8 @@ class TokenService {
     } else {
       token = await prisma.token.create({
         data: {
-          userId,
           refreshToken,
+          userId: currentUser.id,
         },
       });
     }

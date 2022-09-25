@@ -21,17 +21,16 @@ class UserService {
     const hashPassword = await bcrypt.hash(password, 5);
     const activationLink = uuid();
 
-    const activation = await prisma.activation.create({
-      data: {
-        activationLink,
-        isActivate: false,
-      },
-    });
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashPassword,
-        activationId: activation.id,
+        activation: {
+          create: {
+            activationLink,
+            isActivate: false,
+          },
+        },
       },
     });
 
@@ -49,28 +48,25 @@ class UserService {
   }
 
   async activate(activationLink: string) {
-    const activation = await prisma.activation.findFirst({
+    const currentUser = await prisma.user.findFirst({
       where: {
-        activationLink,
+        activation: {
+          activationLink,
+        },
       },
       select: {
+        activation: true,
         id: true,
       },
     });
 
-    const user = await prisma.user.findFirst({
-      where: {
-        activationId: activation?.id,
-      },
-    });
-
-    if (!user) {
+    if (!currentUser) {
       throw new Error("Ссылка на активацию недействительна");
     }
 
     await prisma.activation.update({
       where: {
-        id: activation?.id,
+        id: currentUser?.activation?.id,
       },
       data: {
         isActivate: true,

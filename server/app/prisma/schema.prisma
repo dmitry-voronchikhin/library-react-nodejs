@@ -13,26 +13,33 @@ datasource db {
 /// Таблица для хранения refresh токенов
 model Token {
   id           String @id @default(uuid()) /// Уникальный идентификатор
-  refreshToken String /// Refresh токен для обновления токена доступа
-  User         User   @relation(fields: [userId], references: [id])
-  userId       String @unique /// Идентификатор пользователя
+  refreshToken String @map("refresh_token") /// Refresh токен для обновления токена доступа
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String @unique @map("user_id")
+
+  @@map("token")
 }
 
 model Activation {
   id             String  @id @default(uuid()) /// Уникальный идентификатор
-  activationLink String? /// Ссылка на активацию аккаунта
-  isActivate     Boolean @default(false) /// Флаг, показываеющий, активирован ли аккаунт
-  User           User[]
+  activationLink String? @map("activation_link") /// Ссылка на активацию аккаунта
+  isActivate     Boolean @default(false) @map("is_activate") /// Флаг, показываеющий, активирован ли аккаунт
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String  @unique @map("user_id")
+
+  @@map("activation")
 }
 
 /// Таблица для хранения всех пользователей системы
 model User {
-  id           String     @id @default(uuid()) /// Уникальный идентификатор
-  email        String     @unique /// Почта регистрации пользователя
-  password     String /// Пароль пользователя
-  Token        Token[] /// Список refresh токенов пользователя
-  Activation   Activation @relation(fields: [activationId], references: [id])
-  activationId String
+  id         String      @id @default(uuid()) /// Уникальный идентификатор
+  email      String      @unique /// Почта регистрации пользователя
+  password   String /// Пароль пользователя
+  token      Token? /// Токены доступа пользователей
+  activation Activation? /// Информация об активации аккаунта
+  role       Role        @default(READER) /// Роль пользователя
+
+  @@map("user")
 }
 
 /// Таблица для хранения всех книг в библиотеке
@@ -41,7 +48,9 @@ model Book {
   name              String /// Наименование книги
   author            String /// Автор книги
   publishingHouse   PublishingHouse @relation(fields: [publishingHouseId], references: [id])
-  publishingHouseId String /// Издательство книги
+  publishingHouseId String          @map("publishing_house_id")
+
+  @@map("book")
 }
 
 /// Таблица для хранения всех издательств, использющихся в библиотечных книгах
@@ -49,13 +58,12 @@ model PublishingHouse {
   id      String @id @default(uuid()) /// Уникальный идентификатор
   name    String /// Наименование издательства
   address String /// Адрес местонахождения
-  Book    Book[]
+  books   Book[] /// Книги издательства
+
+  @@map("publishing_house")
 }
 
-/// Таблица для хранения читателей книг в библиотеке
-model Reader {
-  id        String   @id @default(uuid()) /// Уникальный идентификатор
-  name      String /// ФИО читателя
-  birthDate DateTime /// Дата рождения
-  address   String /// Адрес читателя
+enum Role {
+  READER
+  ADMIN
 }

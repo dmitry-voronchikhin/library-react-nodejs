@@ -10,7 +10,6 @@ const transporterOptions: SMTPTransport.Options = {
     pass: process.env.SMTP_PASSWORD || "",
   },
 };
-1;
 
 class MailService {
   transporter: Transporter<SMTPTransport.Options>;
