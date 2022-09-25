@@ -1,13 +1,32 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
 
+import {
+  ACTIVATION_LINK_ERROR,
+  PASSWORD_ERROR,
+  USER_ALREADY_EXIST_ERROR,
+  USER_NOT_FOUND_ERROR,
+} from "./constants";
+import { GenerateTokensResult, LoginResult, RegistrationResult } from "./types";
 import { tokenService } from "./token.service";
 import { mailService } from "./mail.service";
 import { prisma } from "../prisma";
 import { UserDto } from "../dto/user.dto";
 
 class UserService {
-  async registration(email: string, password: string) {
+  private async generateAndSaveTokens(
+    userData: UserDto
+  ): Promise<GenerateTokensResult> {
+    const tokens = tokenService.generateTokens({ ...userData });
+    await tokenService.saveToken(userData.id, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  async registration(
+    email: string,
+    password: string
+  ): Promise<RegistrationResult> {
     const currentUser = await prisma?.user.findUnique({
       where: {
         email,
@@ -15,7 +34,7 @@ class UserService {
     });
 
     if (currentUser) {
-      throw new Error(`Пользователь с email ${email} уже существует`);
+      throw new Error(USER_ALREADY_EXIST_ERROR);
     }
 
     const hashPassword = await bcrypt.hash(password, 5);
@@ -38,8 +57,7 @@ class UserService {
     await mailService.sendActivationMail(email, accountActivationLink);
 
     const userDto = new UserDto(newUser);
-    const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(newUser.id, tokens.refreshToken);
+    const tokens = await this.generateAndSaveTokens(userDto);
 
     return {
       ...tokens,
@@ -47,7 +65,7 @@ class UserService {
     };
   }
 
-  async activate(activationLink: string) {
+  async activate(activationLink: string): Promise<void> {
     const currentUser = await prisma.user.findFirst({
       where: {
         activation: {
@@ -61,7 +79,7 @@ class UserService {
     });
 
     if (!currentUser) {
-      throw new Error("Ссылка на активацию недействительна");
+      throw new Error(ACTIVATION_LINK_ERROR);
     }
 
     await prisma.activation.update({
@@ -72,6 +90,32 @@ class UserService {
         isActivate: true,
       },
     });
+  }
+
+  async login(email: string, password: string): Promise<LoginResult> {
+    const user = await prisma?.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      throw new Error(USER_NOT_FOUND_ERROR);
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      throw new Error(PASSWORD_ERROR);
+    }
+
+    const userDto = new UserDto(user);
+    const tokens = await this.generateAndSaveTokens(userDto);
+
+    return {
+      ...tokens,
+      user: userDto,
+    };
   }
 }
 

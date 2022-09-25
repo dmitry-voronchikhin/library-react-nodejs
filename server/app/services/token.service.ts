@@ -1,22 +1,31 @@
 import jwt from "jsonwebtoken";
 
+import {
+  ACCESS_TOKEN_EXPIRIES_IN,
+  REFRESH_TOKEN_EXPIRIES_IN,
+  SAVE_TOKEN_ERROR,
+} from "./constants";
 import { Token } from ".prisma/client";
 import { prisma } from "../prisma";
+import { EMPTY_STRING } from "../common/constants";
 
 class TokenService {
+  JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || EMPTY_STRING;
+  JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || EMPTY_STRING;
+
   generateTokens(payload: object) {
     const accessToken = jwt.sign(
       payload,
-      process.env.JWT_ACCESS_SECRET as jwt.Secret,
+      this.JWT_ACCESS_SECRET as jwt.Secret,
       {
-        expiresIn: "15m",
+        expiresIn: ACCESS_TOKEN_EXPIRIES_IN,
       }
     );
     const refreshToken = jwt.sign(
       payload,
-      process.env.JWT_REFRESH_SECRET as jwt.Secret,
+      this.JWT_ACCESS_SECRET as jwt.Secret,
       {
-        expiresIn: "30d",
+        expiresIn: REFRESH_TOKEN_EXPIRIES_IN,
       }
     );
 
@@ -26,7 +35,7 @@ class TokenService {
     };
   }
 
-  async saveToken(userId: string, refreshToken: string) {
+  async saveToken(userId: string, refreshToken: string): Promise<Token> {
     const currentUser = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -38,9 +47,7 @@ class TokenService {
     });
 
     if (!currentUser) {
-      throw new Error(
-        "При сохранении токена произошла ошибка. Пользователь не найден"
-      );
+      throw new Error(SAVE_TOKEN_ERROR);
     }
 
     let token: Token;

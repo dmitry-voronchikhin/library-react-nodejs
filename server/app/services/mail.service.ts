@@ -1,31 +1,39 @@
 import nodemailer, { Transporter } from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
 
-const transporterOptions: SMTPTransport.Options = {
-  host: process.env.SMTP_HOST || "",
-  port: Number(process.env.SMTP_PORT || 0),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USER || "",
-    pass: process.env.SMTP_PASSWORD || "",
-  },
-};
+import { ACTIVATION_MAIL_SUBJECT } from "./constants";
+import { EMPTY_STRING } from "../common/constants";
 
 class MailService {
+  SMTP_USER = process.env.SMTP_USER;
+  SMTP_PASSWORD = process.env.SMTP_PASSWORD;
+  SMTP_HOST = process.env.SMTP_HOST;
+  SMTP_PORT = Number(process.env.SMTP_PORT || 0);
+
+  TRANSPORTER_OPTIONS: SMTPTransport.Options = {
+    host: this.SMTP_HOST || EMPTY_STRING,
+    port: this.SMTP_PORT,
+    secure: true,
+    auth: {
+      user: this.SMTP_USER || EMPTY_STRING,
+      pass: this.SMTP_PASSWORD || EMPTY_STRING,
+    },
+  };
+
   transporter: Transporter<SMTPTransport.Options>;
 
   constructor() {
-    this.transporter = nodemailer.createTransport(transporterOptions);
+    this.transporter = nodemailer.createTransport(this.TRANSPORTER_OPTIONS);
   }
 
-  async sendActivationMail(to: string, link: string) {
+  async sendActivationMail(to: string, link: string): Promise<void> {
     const linkParts = link.split("/");
     const linkLabel = linkParts[linkParts.length - 1];
 
     await this.transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: this.SMTP_USER,
       to,
-      subject: 'Активация аккаунта в системе "Онлайн Библиотека"',
+      subject: ACTIVATION_MAIL_SUBJECT,
       html: `
         <div>
           <h1>Активация учетной записи ${to}</h1>
