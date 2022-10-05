@@ -1,0 +1,13 @@
+{
+  "collectCoverageFrom": [
+    "src /**/*.{js,jsx}"
+  ],
+  "coverageDirectory": "coverage",
+  "testEnvironment": "jest-environment-jsdom",
+  "extensionsToTreatAsEsm": [
+    ".tsx"
+  ],
+  "setupFilesAfterEnv": [
+    "<rootDir>/jest.setup.js"
+  ]
+}
