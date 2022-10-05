@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "library project server",
   "main": "dist/index.js",
+  "repository": "https://github.com/dmitry-voronchikhin/library-react-nodejs",
   "author": "Dmitriy Voronchikhin <vdima775@gmail.com>",
   "license": "MIT",
   "scripts": {
