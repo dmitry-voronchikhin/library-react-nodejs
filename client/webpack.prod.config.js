@@ -5,6 +5,28 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const styleLoaders = (extra) => {
+  const loaders = [
+    MiniCssExtractPlugin.loader,
+    {
+      loader: 'css-loader',
+      options: {
+        importLoaders: 0,
+        modules: {
+          localIdentName: '[hash:base64:5]',
+          auto: true,
+        },
+      },
+    },
+  ];
+
+  if (extra) {
+    loaders.push(extra);
+  }
+
+  return loaders;
+};
+
 const config = {
   mode: 'production',
   entry: './src/index.tsx',
@@ -31,12 +53,23 @@ const config = {
       },
       {
         test: /\.(css)$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: styleLoaders(),
+      },
+      {
+        test: /\.(s[ac]ss)$/,
+        use: styleLoaders('sass-loader'),
       },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@app': path.resolve(__dirname, 'src/app/'),
+      '@api': path.resolve(__dirname, 'src/app/api/'),
+      '@components': path.resolve(__dirname, 'src/app/components/'),
+      '@constants': path.resolve(__dirname, 'src/app/constants/'),
+      '@store': path.resolve(__dirname, 'src/app/store/'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({

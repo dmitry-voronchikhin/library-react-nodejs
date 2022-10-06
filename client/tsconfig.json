@@ -16,7 +16,19 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@api": ["app/api/index.ts"],
+      "@api/*": ["app/api/*"],
+      "@components": ["app/components/index.ts"],
+      "@components/*": ["app/components/*"],
+      "@constants": ["app/constants/index.ts"],
+      "@constants/*": ["app/constants/*"],
+      "@store": ["app/store/store.ts"],
+      "@store/*": ["app/store/*"]
+    },
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": ["src"],
   "exclude": ["dist", "./node_modules/**/*"]

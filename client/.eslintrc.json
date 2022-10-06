@@ -7,7 +7,7 @@
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module",
-    "project": "./tsconfig.json",
+    "project": ["**/tsconfig.json"],
     "ecmaFeatures": {
       "jsx": true
     }
@@ -56,6 +56,8 @@
     "webpack.prod.config.js",
     "webpack.dev.config.js",
     "jest.setup.js",
-    "node_modules"
+    "node_modules",
+    "global.d.ts",
+    "dist"
   ]
 }

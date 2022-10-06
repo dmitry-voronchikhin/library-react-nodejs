@@ -4,6 +4,29 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
+const styleLoaders = (extra) => {
+  const loaders = [
+    'style-loader',
+    {
+      loader: 'css-loader',
+      options: {
+        sourceMap: true,
+        importLoaders: 0,
+        modules: {
+          localIdentName: '[local]__[hash:base64:5]',
+          auto: true,
+        },
+      },
+    },
+  ];
+
+  if (extra) {
+    loaders.push(extra);
+  }
+
+  return loaders;
+};
+
 const config = {
   mode: 'development',
   output: {
@@ -28,12 +51,23 @@ const config = {
       },
       {
         test: /\.(css)$/,
-        use: ['style-loader', 'css-loader'],
+        use: styleLoaders(),
+      },
+      {
+        test: /\.(s[ac]ss)$/,
+        use: styleLoaders('sass-loader'),
       },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@app': path.resolve(__dirname, 'src/app/'),
+      '@api': path.resolve(__dirname, 'src/app/api/'),
+      '@components': path.resolve(__dirname, 'src/app/components/'),
+      '@constants': path.resolve(__dirname, 'src/app/constants/'),
+      '@store': path.resolve(__dirname, 'src/app/store/'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
