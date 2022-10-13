@@ -101,13 +101,13 @@ class UserService {
     });
 
     if (!user) {
-      throw new Error(USER_NOT_FOUND_ERROR);
+      throw USER_NOT_FOUND_ERROR;
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
-      throw new Error(PASSWORD_ERROR);
+      throw PASSWORD_ERROR;
     }
 
     const userDto = new UserDto(user);

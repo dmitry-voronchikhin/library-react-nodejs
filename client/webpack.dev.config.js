@@ -57,6 +57,10 @@ const config = {
         test: /\.(s[ac]ss)$/,
         use: styleLoaders('sass-loader'),
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   resolve: {
@@ -71,7 +75,8 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/public/index.html',
+      template: 'src/static/index.html',
+      favicon: 'src/static/favicon.ico'
     }),
     new HotModuleReplacementPlugin(),
     new ForkTsCheckerWebpackPlugin({

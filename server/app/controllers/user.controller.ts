@@ -52,9 +52,10 @@ class UserController {
 
       return res.status(200).json(userData);
     } catch (e) {
-      console.error(e);
-      return res.status(500).json({
-        error: e,
+      return res.status(401).json({
+        error: {
+          message: e,
+        },
       });
     }
   }

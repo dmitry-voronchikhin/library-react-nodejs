@@ -1,0 +1,25 @@
+.LoginLayout {
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
+  position: relative;
+  height: 100vh;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    background: no-repeat center url("../../../static/assets/login_background.jpg");
+    background-size: cover;
+  }
+}
+
+.LoginLayoutContent {
+  width: 350px;
+}
