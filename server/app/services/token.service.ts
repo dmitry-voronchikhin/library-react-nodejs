@@ -23,7 +23,7 @@ class TokenService {
     );
     const refreshToken = jwt.sign(
       payload,
-      this.JWT_ACCESS_SECRET as jwt.Secret,
+      this.JWT_REFRESH_SECRET as jwt.Secret,
       {
         expiresIn: REFRESH_TOKEN_EXPIRIES_IN,
       }
