@@ -104,6 +104,9 @@ class TokenService {
       where: {
         refreshToken,
       },
+      select: {
+        userId: true,
+      },
     });
   }
 }

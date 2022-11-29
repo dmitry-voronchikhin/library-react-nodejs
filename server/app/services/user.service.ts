@@ -123,9 +123,9 @@ class UserService {
     await tokenService.removeToken(refreshToken);
   }
 
-  async refresh(refreshToken: string) {
+  async refresh(refreshToken: string): Promise<GenerateTokensResult> {
     if (!refreshToken) {
-      throw new Error(UNAUTHORIZED_ERROR);
+      throw UNAUTHORIZED_ERROR;
     }
 
     const isRefreshTokenValid = await tokenService.validateRefreshToken(
@@ -134,7 +134,7 @@ class UserService {
     const existedRefreshToken = await tokenService.checkToken(refreshToken);
 
     if (!isRefreshTokenValid || !existedRefreshToken) {
-      throw new Error(UNAUTHORIZED_ERROR);
+      throw UNAUTHORIZED_ERROR;
     }
 
     const currentUser = await prisma.user.findUnique({
@@ -144,7 +144,7 @@ class UserService {
     });
 
     if (!currentUser) {
-      throw new Error(UNAUTHORIZED_ERROR);
+      throw UNAUTHORIZED_ERROR;
     }
 
     const userDto = new UserDto(currentUser);
@@ -152,7 +152,6 @@ class UserService {
 
     return {
       ...tokens,
-      user: userDto,
     };
   }
 }
