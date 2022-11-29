@@ -36,5 +36,6 @@ export class Store {
     await userRequest.logout();
     sessionStorage.clear();
     this.setAuth(false);
+    location.reload();
   }
 }
