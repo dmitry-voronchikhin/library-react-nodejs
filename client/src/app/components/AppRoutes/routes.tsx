@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { LoginLayout } from '@app/layouts';
+import { LoginLayout, NotFound } from '@app/layouts';
 import { Role } from '@app/api/types';
 import { LoginForm } from '@app/components';
 import { MainLayout } from '@app/layouts/MainLayout';
 import { Route } from './types';
 
-const Login: JSX.Element = (
+const LoginPage: JSX.Element = (
   <LoginLayout>
     <LoginForm />
   </LoginLayout>
@@ -20,11 +20,13 @@ const MainPage: JSX.Element = (
   </MainLayout>
 );
 
+const NotFoundPage: JSX.Element = <NotFound />;
+
 export const routes: Route[] = [
   {
     name: 'Авторизация',
     path: '/login',
-    component: Login,
+    component: LoginPage,
     inNav: false,
     roles: [],
     isPrivate: false,
@@ -35,6 +37,14 @@ export const routes: Route[] = [
     component: MainPage,
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
+    isPrivate: true,
+  },
+  {
+    name: '404',
+    path: '*',
+    component: NotFoundPage,
+    inNav: false,
+    roles: [],
     isPrivate: true,
   },
 ];

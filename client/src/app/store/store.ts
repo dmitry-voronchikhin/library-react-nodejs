@@ -26,7 +26,10 @@ export class Store {
   async checkAuth() {
     if (sessionStorage.getItem('token')) {
       this.setAuth(true);
+      return;
     }
+
+    this.setAuth(false);
   }
 
   async logout() {

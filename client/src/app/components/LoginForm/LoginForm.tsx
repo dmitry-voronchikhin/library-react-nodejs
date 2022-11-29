@@ -3,6 +3,7 @@ import { Button, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 import {
   DEFAULT_TECHNICAL_ERROR,
@@ -14,7 +15,6 @@ import { openNotification } from '@app/utils';
 import { Context } from '@app/App';
 
 import styles from './styles.module.scss';
-import { observer } from 'mobx-react-lite';
 
 export const LoginFormComponent: FC = () => {
   const [email, setEmail] = useState<string>(EMPTY_STRING);

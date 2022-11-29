@@ -1,5 +1,5 @@
-import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, ReactNode } from 'react';
+import { observer } from 'mobx-react-lite';
 
 import styles from './styles.module.scss';
 
