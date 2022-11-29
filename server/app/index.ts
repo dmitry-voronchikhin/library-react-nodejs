@@ -5,22 +5,24 @@ import cors from "cors";
 
 import { Apollo } from "./graphql";
 import { rootRouter } from "./router";
+import { setHeaders } from "./middlewares";
 
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
+
+const CORS_CONFIG = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+};
 
 const startServer = () => {
   const app = express();
 
   app.use(express.json());
   app.use(cookieParser());
-  app.use(
-    cors({
-      credentials: true,
-      origin: process.env.CLIENT_URL,
-    })
-  );
+  app.use(cors(CORS_CONFIG));
+  app.use(setHeaders());
 
   const apolloServer = new Apollo(app);
   apolloServer.init();
