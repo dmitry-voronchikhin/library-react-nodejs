@@ -35,7 +35,7 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
           defaultSelectedKeys={['1']}
           items={menuItems}
         />
-        <Button onClick={() => store.logout()} type="primary" size="large">
+        <Button onClick={() => store.logout()} type="primary">
           Выйти
         </Button>
       </Header>
