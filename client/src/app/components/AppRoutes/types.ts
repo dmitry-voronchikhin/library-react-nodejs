@@ -7,4 +7,5 @@ export type Route = {
   component: JSX.Element;
   roles: Role[];
   isPrivate: boolean;
+  index?: boolean;
 };

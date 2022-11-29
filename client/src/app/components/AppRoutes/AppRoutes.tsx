@@ -1,28 +1,25 @@
-import React, { FC, useContext } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import React, { FC } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
 import { routes } from '@app/components/AppRoutes/routes';
-import { Context } from '@app/App';
+import { ProtectedRoute } from './ProtectedRoute';
 
 const AppRoutesComponent: FC = () => {
-  const { store } = useContext(Context);
-
   return (
     <Routes>
       {routes.map((route) => {
-        if (route.isPrivate && !store.isAuth) {
-          return (
-            <Route
-              key="login"
-              path="*"
-              element={<Navigate to="/login" replace />}
-            />
-          );
-        }
-
         return (
-          <Route key={route.name} path={route.path} element={route.component} />
+          <Route
+            key={route.name}
+            path={route.path}
+            element={
+              <ProtectedRoute isPrivate={route.isPrivate}>
+                {route.component}
+              </ProtectedRoute>
+            }
+            index={route.index}
+          />
         );
       })}
     </Routes>

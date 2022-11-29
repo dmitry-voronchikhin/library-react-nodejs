@@ -15,7 +15,7 @@ const LoginPage: JSX.Element = (
 const MainPage: JSX.Element = (
   <MainLayout>
     <div>
-      <h1>Main page</h1>
+      <h1>Главная</h1>
     </div>
   </MainLayout>
 );
@@ -25,7 +25,7 @@ const NotFoundPage: JSX.Element = <NotFound />;
 export const routes: Route[] = [
   {
     name: 'Авторизация',
-    path: '/login',
+    path: 'login',
     component: LoginPage,
     inNav: false,
     roles: [],
@@ -38,6 +38,7 @@ export const routes: Route[] = [
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
     isPrivate: true,
+    index: true,
   },
   {
     name: '404',
