@@ -7,7 +7,6 @@ class BooksService {
   }
 
   async addBook(request: AddBookInput) {
-    console.log(request);
     const { name, publishingHouseId, author } = request;
     return await prisma.book.create({
       data: {
