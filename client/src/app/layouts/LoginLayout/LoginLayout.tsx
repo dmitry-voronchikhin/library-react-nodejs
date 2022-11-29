@@ -1,8 +1,9 @@
+import { observer } from 'mobx-react-lite';
 import React, { FC, ReactElement, ReactNode } from 'react';
 
 import styles from './styles.module.scss';
 
-export const LoginLayout: FC<{
+const LoginLayoutComponent: FC<{
   children: ReactNode | ReactElement | null | undefined;
 }> = ({ children }) => {
   return (
@@ -11,3 +12,5 @@ export const LoginLayout: FC<{
     </div>
   );
 };
+
+export const LoginLayout = observer(LoginLayoutComponent);

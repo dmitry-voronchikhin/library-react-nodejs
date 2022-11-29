@@ -1,10 +1,8 @@
 import { makeAutoObservable } from 'mobx';
 
 import { userRequest } from '@api/user/user.request';
-import { User } from '@api/types';
 
 export class Store {
-  user = {} as User;
   isAuth = false;
 
   constructor() {
@@ -15,14 +13,25 @@ export class Store {
     this.isAuth = state;
   }
 
-  setUser(user: User) {
-    this.user = user;
+  async login(email: string, password: string) {
+    try {
+      const response = await userRequest.login(email, password);
+      sessionStorage.setItem('token', response.data.accessToken);
+      this.setAuth(true);
+    } catch {
+      this.setAuth(false);
+    }
   }
 
-  async login(email: string, password: string) {
-    const response = await userRequest.login(email, password);
-    localStorage.setItem('token', response.data.accessToken);
-    this.setAuth(true);
-    this.setUser(response.data.user);
+  async checkAuth() {
+    if (sessionStorage.getItem('token')) {
+      this.setAuth(true);
+    }
+  }
+
+  async logout() {
+    await userRequest.logout();
+    sessionStorage.clear();
+    this.setAuth(false);
   }
 }

@@ -1,7 +1,8 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import {
   DEFAULT_TECHNICAL_ERROR,
@@ -13,20 +14,33 @@ import { openNotification } from '@app/utils';
 import { Context } from '@app/App';
 
 import styles from './styles.module.scss';
+import { observer } from 'mobx-react-lite';
 
-export const LoginForm: FC = () => {
+export const LoginFormComponent: FC = () => {
   const [email, setEmail] = useState<string>(EMPTY_STRING);
   const [password, setPassword] = useState<string>(EMPTY_STRING);
-
   const [loading, setLoading] = useState<boolean>(false);
-
   const { store } = useContext(Context);
+  const navigate = useNavigate();
 
-  const onSubmit = () => {
+  const redirectToHome = () => {
+    if (store.isAuth) {
+      navigate('/');
+    }
+  };
+
+  useEffect(() => {
+    redirectToHome();
+  });
+
+  const onSubmit = async () => {
     setLoading(true);
 
     store
       .login(email, password)
+      .then(() => {
+        redirectToHome();
+      })
       .catch((error: AxiosError<ErrorResponse>) => {
         const errorMessage = error.response?.data?.error?.message;
 
@@ -95,3 +109,5 @@ export const LoginForm: FC = () => {
     </Form>
   );
 };
+
+export const LoginForm = observer(LoginFormComponent);
