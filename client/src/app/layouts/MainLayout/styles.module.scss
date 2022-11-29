@@ -11,4 +11,9 @@
 .Content {
   padding: 0 30px;
   margin-top: 64px;
+
+  &__Body {
+    padding: 24px 0;
+    min-height: 380px;
+  }
 }
