@@ -5,6 +5,10 @@ import { EMPTY_STRING } from "../common/constants";
 
 const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 const CLIENT_URL = process.env.CLIENT_URL;
+const COOKIE_OPTIONS = {
+  maxAge: COOKIE_MAX_AGE,
+  httpOnly: true,
+};
 
 class UserController {
   async registration(req: Request, res: Response) {
@@ -12,10 +16,7 @@ class UserController {
       const { email, password } = req.body;
       const userData = await userService.registration(email, password);
 
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: COOKIE_MAX_AGE,
-        httpOnly: true,
-      });
+      res.cookie("refreshToken", userData.refreshToken, COOKIE_OPTIONS);
 
       return res.status(200).json(userData);
     } catch (e) {
@@ -45,13 +46,11 @@ class UserController {
       const { email, password } = req.body;
       const userData = await userService.login(email, password);
 
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: COOKIE_MAX_AGE,
-        httpOnly: true,
-      });
+      res.cookie("refreshToken", userData.refreshToken, COOKIE_OPTIONS);
 
       return res.status(200).json(userData);
     } catch (e) {
+      console.log(e);
       return res.status(401).json({
         error: {
           message: e,
@@ -79,18 +78,17 @@ class UserController {
   async refresh(req: Request, res: Response) {
     try {
       const { refreshToken } = req.cookies;
-      const userData = await userService.refresh(refreshToken);
+      const tokenData = await userService.refresh(refreshToken);
 
-      res.cookie("refreshToken", userData.refreshToken, {
-        maxAge: COOKIE_MAX_AGE,
-        httpOnly: true,
-      });
+      res.cookie("refreshToken", tokenData.refreshToken, COOKIE_OPTIONS);
 
-      return res.status(200).json(userData);
+      return res.status(200).json(tokenData);
     } catch (e) {
       console.error(e);
-      return res.status(500).json({
-        error: e,
+      return res.status(401).json({
+        error: {
+          message: e,
+        },
       });
     }
   }
