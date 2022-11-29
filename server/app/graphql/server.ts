@@ -19,9 +19,12 @@ export class Apollo {
       csrfPrevention: true,
       cache: "bounded",
       context: async ({ req }) => {
-        const token = req.cookies.refreshToken;
-        const checkedToken = await tokenService.checkToken(token);
-        if (!checkedToken) {
+        const refreshToken = req.cookies.refreshToken;
+        const isTokenValid = await tokenService.validateRefreshToken(
+          refreshToken
+        );
+        const checkedToken = await tokenService.checkToken(refreshToken);
+        if (isTokenValid || !checkedToken) {
           throw new Error("Пользователь не авторизован");
         }
 
