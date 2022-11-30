@@ -1,6 +1,7 @@
 import { ApolloServer } from "apollo-server-express";
 import { Express } from "express";
 
+import { EMPTY_STRING } from "../common/constants";
 import { tokenService } from "../services/token.service";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./schema";
@@ -19,16 +20,13 @@ export class Apollo {
       csrfPrevention: true,
       cache: "bounded",
       context: async ({ req }) => {
-        const refreshToken = req.cookies.refreshToken;
-        const isTokenValid = await tokenService.validateRefreshToken(
-          refreshToken
-        );
-        const checkedToken = await tokenService.checkToken(refreshToken);
-        if (isTokenValid || !checkedToken) {
+        const token = req.headers.authorization?.split(" ")[1] || EMPTY_STRING;
+        const isTokenValid = await tokenService.validateAccessToken(token);
+        if (!isTokenValid) {
           throw new Error("Пользователь не авторизован");
         }
 
-        return { token: checkedToken };
+        return { token };
       },
     });
 
