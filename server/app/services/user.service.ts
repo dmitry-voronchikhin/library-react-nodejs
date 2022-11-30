@@ -148,7 +148,7 @@ class UserService {
     }
 
     const userDto = new UserDto(currentUser);
-    const tokens = this.generateAndSaveTokens(userDto);
+    const tokens = await this.generateAndSaveTokens(userDto);
 
     return {
       ...tokens,
