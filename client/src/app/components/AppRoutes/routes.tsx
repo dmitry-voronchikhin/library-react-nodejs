@@ -2,7 +2,8 @@ import React from 'react';
 
 import { LoginLayout, NotFound } from '@app/layouts';
 import { Role } from '@app/api/types';
-import { LoginForm } from '@app/components';
+import { LoginForm } from '@app/components/LoginForm';
+import { BooksTable } from '@app/components/Books';
 import { MainLayout } from '@app/layouts/MainLayout';
 import { Route } from './types';
 
@@ -14,9 +15,7 @@ const LoginPage: JSX.Element = (
 
 const MainPage: JSX.Element = (
   <MainLayout>
-    <div>
-      <h1>Главная</h1>
-    </div>
+    <BooksTable />
   </MainLayout>
 );
 

@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 import { userRequest } from '@api/user/user.request';
+import { tokenRequest } from '@api/user/token.request';
 
 export class Store {
   isAuth = false;
@@ -23,13 +24,22 @@ export class Store {
     }
   }
 
-  async checkAuth() {
+  checkAuth() {
     if (sessionStorage.getItem('token')) {
       this.setAuth(true);
       return;
     }
 
     this.setAuth(false);
+  }
+
+  async refreshToken() {
+    try {
+      const tokens = await tokenRequest.refresh();
+      sessionStorage.setItem('token', tokens.data.accessToken);
+    } catch {
+      this.setAuth(false);
+    }
   }
 
   async logout() {

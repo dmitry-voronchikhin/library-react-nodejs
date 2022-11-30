@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { tokenRequest } from './user/token.request';
+
 export const BASE_API_URL = 'http://localhost:5000/api';
 
 const api = axios.create({
@@ -26,10 +28,7 @@ api.interceptors.response.use(
       error.config._isRetry
     ) {
       originalRequest._isRetry = true;
-      const response = await axios.get(`${BASE_API_URL}/user/refresh`, {
-        withCredentials: true,
-      });
-      sessionStorage.setItem('token', response.data.accessToken);
+      await tokenRequest.refresh();
 
       return api.request(originalRequest);
     }

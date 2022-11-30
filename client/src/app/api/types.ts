@@ -8,11 +8,14 @@ export type User = {
   email: string;
 };
 
-export type LoginResponse = {
+export type TokensResponse = {
   accessToken: string;
   refreshToken: string;
-  user: User;
 };
+
+export type LoginResponse = {
+  user: User;
+} & TokensResponse;
 
 export type ErrorResponse = {
   error: {

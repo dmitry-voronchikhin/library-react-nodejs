@@ -8,9 +8,9 @@ export const userRequest = {
     email: string,
     password: string,
   ): Promise<AxiosResponse<LoginResponse>> => {
-    return api.post<LoginResponse>('/user/login', { email, password });
+    return await api.post<LoginResponse>('/user/login', { email, password });
   },
   logout: async (): Promise<AxiosResponse> => {
-    return api.get('/user/logout');
+    return await api.get('/user/logout');
   },
 };

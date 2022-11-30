@@ -1,0 +1,18 @@
+overwrite: true
+schema: 
+  - http://localhost:5000/graphql:
+     headers:
+      authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZkaW1hNzc1QGdtYWlsLmNvbSIsImlkIjoiYzg1MTQ5MGMtOGRkNy00YjVlLTgzZWQtZWNmODNhMDBhOWQ0Iiwicm9sZSI6IlJFQURFUiIsImlhdCI6MTY2OTgwNjY0NiwiZXhwIjoxNjY5ODA3NTQ2fQ.YWJ7F4NwwRg8MSK0W0taDm3nPtxbebfqhhNZtjvn6fY'
+documents: src/**/*.ts
+generates:
+  src/app/graphql/types.d.ts:
+    plugins: 
+      - typescript
+      - typescript-operations
+    config:
+      constEnums: true
+      withHooks: true  
+    hooks:
+      afterOneFileWrite: 
+        - 'eslint --fix'
+        - 'prettier --write'
