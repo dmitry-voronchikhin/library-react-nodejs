@@ -3,7 +3,7 @@ import { Button, Layout, Menu } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import { observer } from 'mobx-react-lite';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { compact } from 'lodash';
 
@@ -14,7 +14,6 @@ import styles from './styles.module.scss';
 
 const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
   const { store } = useContext(Context);
-  const navigate = useNavigate();
   const routes = getRoutes(store.checkAuth());
 
   const menuItems: ItemType[] = useMemo(
@@ -39,7 +38,6 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
 
   const logout = async () => {
     await store.logout();
-    navigate('/login');
   };
 
   return (
