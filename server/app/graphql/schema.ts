@@ -5,7 +5,13 @@ export const typeDefs = gql`
     id: String
     name: String
     author: String
-    publishingHouse: String
+    publishingHouse: PublishingHouse
+  }
+
+  type PublishingHouse {
+    id: String
+    name: String
+    address: String
   }
 
   input AddBookInput {
@@ -16,6 +22,7 @@ export const typeDefs = gql`
 
   type Query {
     getAllBooks: [Book]
+    getAllPublishingHouses: [PublishingHouse]
   }
 
   type Mutation {

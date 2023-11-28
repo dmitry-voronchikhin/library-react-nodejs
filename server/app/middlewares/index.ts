@@ -1,1 +1,1 @@
-export { setHeaders } from "./setHeaders";
+export { setHeaders } from "./set-headers";
