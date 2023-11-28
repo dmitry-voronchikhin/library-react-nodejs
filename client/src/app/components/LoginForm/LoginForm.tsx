@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { AxiosError } from 'axios';
@@ -23,23 +23,13 @@ export const LoginFormComponent: FC = () => {
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
-  const redirectToHome = () => {
-    if (store.isAuth) {
-      navigate('/');
-    }
-  };
-
-  useEffect(() => {
-    redirectToHome();
-  });
-
   const onSubmit = async () => {
     setLoading(true);
 
     store
       .login(email, password)
       .then(() => {
-        redirectToHome();
+        navigate('/');
       })
       .catch((error: AxiosError<ErrorResponse>) => {
         const errorMessage = error.response?.data?.error?.message;

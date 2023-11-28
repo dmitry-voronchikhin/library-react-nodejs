@@ -19,17 +19,22 @@ export const Context = createContext<AppContext>({ store });
 const apolloClient = createApolloClient();
 
 const AppComponent: FC = () => {
+  const isAuth = store.checkAuth();
+
   useEffect(() => {
-    // store.refreshToken();
-    const intervalId = setInterval(
-      () => store.refreshToken(),
-      REFRESH_TOKEN_TIMEOUT,
-    );
+    let intervalId: NodeJS.Timer | null = null;
+    if (isAuth) {
+      intervalId = setInterval(() => {
+        store.refreshToken();
+      }, REFRESH_TOKEN_TIMEOUT);
+    }
 
-    store.checkAuth();
-
-    return () => clearInterval(intervalId);
-  }, []);
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isAuth]);
 
   return (
     <ApolloProvider client={apolloClient}>

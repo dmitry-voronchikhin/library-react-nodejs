@@ -1,14 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
-import { routes } from '@app/components/AppRoutes/routes';
+import { getRoutes } from '@app/components/AppRoutes/routes';
 import { ProtectedRoute } from './ProtectedRoute';
+import { Context } from '@app/App';
 
 const AppRoutesComponent: FC = () => {
+  const { store } = useContext(Context);
+
+  const isAuth = store.checkAuth();
+
   return (
     <Routes>
-      {routes.map((route) => {
+      {getRoutes(isAuth).map((route) => {
         return (
           <Route
             key={route.name}

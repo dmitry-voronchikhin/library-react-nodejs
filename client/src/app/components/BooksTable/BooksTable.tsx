@@ -9,6 +9,7 @@ import {
   GetAllBooksQueryVariables,
 } from '@app/graphql/types';
 import { GET_ALL_BOOKS } from '@app/graphql/queries';
+import { Table } from 'antd';
 
 const BooksTableComponent: FC = () => {
   const { data, loading } = useQuery<
@@ -22,19 +23,32 @@ const BooksTableComponent: FC = () => {
 
   const books: Book[] = compact(data?.getAllBooks);
 
-  return (
-    <table>
-      <tbody>
-        {books.map((book) => (
-          <tr key={book.id}>
-            <td>{book.name}</td>
-            <td>{book.author}</td>
-            <td>{book.publishingHouse}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  const columns = [
+    {
+      title: 'Наименование',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Автор',
+      dataIndex: 'author',
+      key: 'author',
+    },
+    {
+      title: 'Издательство',
+      dataIndex: 'publishingHouse',
+      key: 'publishingHouse',
+    },
+  ];
+
+  const dataSource = books.map(({ id, name, author, publishingHouse }) => ({
+    key: id,
+    name,
+    author,
+    publishingHouse,
+  }));
+
+  return <Table dataSource={dataSource} columns={columns} />;
 };
 
 export const BooksTable = observer(BooksTableComponent);

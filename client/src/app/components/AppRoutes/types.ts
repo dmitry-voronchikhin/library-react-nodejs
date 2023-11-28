@@ -5,7 +5,7 @@ export type Route = {
   path: string;
   inNav: boolean;
   component: JSX.Element;
-  roles: Role[];
+  roles: Role[] | null;
   isPrivate: boolean;
   index?: boolean;
 };

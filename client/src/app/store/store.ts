@@ -2,6 +2,7 @@ import { makeAutoObservable } from 'mobx';
 
 import { userRequest } from '@api/user/user.request';
 import { tokenRequest } from '@api/user/token.request';
+import { openNotification } from '@app/utils';
 
 export class Store {
   isAuth = false;
@@ -19,18 +20,21 @@ export class Store {
       const response = await userRequest.login(email, password);
       sessionStorage.setItem('token', response.data.accessToken);
       this.setAuth(true);
-    } catch {
+    } catch (e) {
+      openNotification('Ошибка авторизации', '', 'error');
       this.setAuth(false);
+      throw new Error((e as Error).message);
     }
   }
 
-  checkAuth() {
+  checkAuth(): boolean {
     if (sessionStorage.getItem('token')) {
       this.setAuth(true);
-      return;
+      return true;
     }
 
     this.setAuth(false);
+    return false;
   }
 
   async refreshToken() {
@@ -39,6 +43,11 @@ export class Store {
       sessionStorage.setItem('token', tokens.data.accessToken);
     } catch {
       this.setAuth(false);
+      alert(
+        'Произошла ошибка при обновлении токена. Вы будете перенаправлены на страницу авторизации',
+      );
+
+      this.logout();
     }
   }
 

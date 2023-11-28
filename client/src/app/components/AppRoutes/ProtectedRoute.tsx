@@ -9,8 +9,10 @@ export const ProtectedRoute: FC<{
   const location = useLocation();
   const { store } = useContext(Context);
 
-  if (isPrivate && !store.isAuth) {
-    return <Navigate to="login" replace state={{ from: location }} />;
+  const isAuth = store.checkAuth();
+
+  if (isPrivate && !isAuth) {
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
   return children;

@@ -3,17 +3,19 @@ import { Button, Layout, Menu } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import { observer } from 'mobx-react-lite';
 import { ItemType } from 'antd/lib/menu/hooks/useItems';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import cn from 'classnames';
 import { compact } from 'lodash';
 
 import { Context } from '@app/App';
-import { routes } from '@app/components/AppRoutes/routes';
+import { getRoutes } from '@app/components/AppRoutes/routes';
 
 import styles from './styles.module.scss';
 
 const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
   const { store } = useContext(Context);
+  const navigate = useNavigate();
+  const routes = getRoutes(store.checkAuth());
 
   const menuItems: ItemType[] = useMemo(
     () =>
@@ -27,13 +29,17 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
           }
         }),
       ),
-    [],
+    [routes],
   );
 
   const defaultSelectedKeys = [menuItems[0]?.key?.toString() || ''];
+  const selectedKey = routes.filter(
+    (item) => item.path === location.pathname,
+  )[0].name;
 
-  const logout = () => {
-    store.logout();
+  const logout = async () => {
+    await store.logout();
+    navigate('/login');
   };
 
   return (
@@ -44,6 +50,8 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
           mode="horizontal"
           defaultSelectedKeys={defaultSelectedKeys}
           items={menuItems}
+          selectedKeys={[selectedKey]}
+          inlineCollapsed={false}
         />
         <Button onClick={logout} type="primary">
           Выйти
