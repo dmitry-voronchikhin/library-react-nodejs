@@ -2,7 +2,7 @@ overwrite: true
 schema: 
   - http://localhost:5000/graphql:
      headers:
-      authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZkaW1hNzc1QGdtYWlsLmNvbSIsImlkIjoiYzg1MTQ5MGMtOGRkNy00YjVlLTgzZWQtZWNmODNhMDBhOWQ0Iiwicm9sZSI6IlJFQURFUiIsImlhdCI6MTY2OTgwNjY0NiwiZXhwIjoxNjY5ODA3NTQ2fQ.YWJ7F4NwwRg8MSK0W0taDm3nPtxbebfqhhNZtjvn6fY'
+      authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZkaW1hNzc1QGdtYWlsLmNvbSIsImlkIjoiYzg1MTQ5MGMtOGRkNy00YjVlLTgzZWQtZWNmODNhMDBhOWQ0Iiwicm9sZSI6IlJFQURFUiIsImlhdCI6MTcwMDA1NzMzMywiZXhwIjoxNzAwMDU4MjMzfQ.eBOPMW2cBO3TJ2CEJWVw4ujoShv8WkPlp1Tk0Kvyavs'
 documents: src/**/*.ts
 generates:
   src/app/graphql/types.d.ts:

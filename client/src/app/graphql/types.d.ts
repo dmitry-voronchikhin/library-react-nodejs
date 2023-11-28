@@ -29,7 +29,7 @@ export type Book = {
   author?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
-  publishingHouse?: Maybe<Scalars['String']>;
+  publishingHouse?: Maybe<PublishingHouse>;
 };
 
 export type Mutation = {
@@ -41,9 +41,18 @@ export type MutationAddBookArgs = {
   request?: InputMaybe<AddBookInput>;
 };
 
+export type PublishingHouse = {
+  __typename?: 'PublishingHouse';
+  address?: Maybe<Scalars['String']>;
+  books?: Maybe<Array<Maybe<Book>>>;
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllBooks?: Maybe<Array<Maybe<Book>>>;
+  getAllPublishingHouses?: Maybe<Array<Maybe<PublishingHouse>>>;
 };
 
 export type GetAllBooksQueryVariables = Exact<{ [key: string]: never }>;
@@ -55,6 +64,25 @@ export type GetAllBooksQuery = {
     author?: string | null;
     id?: string | null;
     name?: string | null;
-    publishingHouse?: string | null;
+    publishingHouse?: {
+      __typename?: 'PublishingHouse';
+      id?: string | null;
+      name?: string | null;
+      address?: string | null;
+    } | null;
+  } | null> | null;
+};
+
+export type GetAllPublishingHousesQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetAllPublishingHousesQuery = {
+  __typename?: 'Query';
+  getAllPublishingHouses?: Array<{
+    __typename?: 'PublishingHouse';
+    id?: string | null;
+    name?: string | null;
+    address?: string | null;
   } | null> | null;
 };

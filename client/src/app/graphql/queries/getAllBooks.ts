@@ -6,7 +6,11 @@ export const GET_ALL_BOOKS = gql`
       author
       id
       name
-      publishingHouse
+      publishingHouse {
+        id
+        name
+        address
+      }
     }
   }
 `;
