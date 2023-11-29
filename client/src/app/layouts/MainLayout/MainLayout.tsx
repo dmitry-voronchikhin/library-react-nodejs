@@ -49,6 +49,7 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
           defaultSelectedKeys={defaultSelectedKeys}
           items={menuItems}
           selectedKeys={[selectedKey]}
+          style={{ display: 'flex', minWidth: 500 }}
         />
         <Button onClick={logout} type="primary">
           Выйти
