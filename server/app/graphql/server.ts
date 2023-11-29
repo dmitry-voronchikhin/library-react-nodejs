@@ -5,6 +5,7 @@ import { EMPTY_STRING } from "../common/constants";
 import { tokenService } from "../services/token.service";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./schema";
+import { GraphQLError } from "graphql";
 
 export class Apollo {
   expressApp: Express;
@@ -23,7 +24,12 @@ export class Apollo {
         const token = req.headers.authorization?.split(" ")[1] || EMPTY_STRING;
         const isTokenValid = await tokenService.validateAccessToken(token);
         if (!isTokenValid) {
-          throw new Error("Пользователь не авторизован");
+          throw new GraphQLError("Пользователь не авторизован", {
+            extensions: {
+              code: "UNAUTHENTICATED",
+              http: { status: 401 },
+            },
+          });
         }
 
         return { token };

@@ -2,9 +2,12 @@ import {
   ApolloClient,
   ApolloLink,
   createHttpLink,
+  fromPromise,
   InMemoryCache,
 } from '@apollo/client';
+import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
+import { tokenRequest } from '@app/api/user/token.request';
 
 export const createApolloClient = () => {
   const cache = new InMemoryCache();
@@ -24,12 +27,52 @@ export const createApolloClient = () => {
     };
   });
 
-  const apolloLink = ApolloLink.from([authLink, httpLink]);
+  const requestParamsLink = setContext(({ operationName }) => {
+    const opNameUri = `${API_URL}?operation=${operationName}`;
+    return {
+      uri: opNameUri,
+    };
+  });
+
+  const errorLink = onError(({ graphQLErrors, operation, forward }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach((err) => {
+        switch (err.extensions.code) {
+          case 'UNAUTHENTICATED':
+            return fromPromise(
+              tokenRequest.refresh().then((response) => {
+                sessionStorage.setItem('token', response.data.accessToken);
+              }),
+            )
+              .filter((value) => Boolean(value))
+              .flatMap((accessToken) => {
+                const oldHeaders = operation.getContext().headers;
+                operation.setContext({
+                  headers: {
+                    ...oldHeaders,
+                    authorization: `Bearer ${accessToken}`,
+                  },
+                });
+
+                return forward(operation);
+              });
+        }
+      });
+    }
+  });
+
+  const apolloLink = ApolloLink.from([
+    authLink,
+    requestParamsLink,
+    httpLink,
+    errorLink,
+  ]);
 
   return new ApolloClient({
     cache: cache,
-    queryDeduplication: false,
+    queryDeduplication: true,
     link: apolloLink,
+    uri: API_URL,
     connectToDevTools: true,
     defaultOptions: {
       query: {

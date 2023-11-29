@@ -7,7 +7,7 @@ import { AppRoutes } from '@components';
 import { createApolloClient } from './graphql/client';
 import { ApolloProvider } from '@apollo/client';
 
-const REFRESH_TOKEN_TIMEOUT = 1000 * 60 * 15;
+const REFRESH_TOKEN_TIMEOUT = 1000 * 60 * 10;
 
 const store = new Store();
 
