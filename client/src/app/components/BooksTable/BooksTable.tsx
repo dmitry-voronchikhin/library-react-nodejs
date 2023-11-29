@@ -45,7 +45,7 @@ const BooksTableComponent: FC = () => {
     key: id,
     name,
     author,
-    publishingHouse,
+    publishingHouse: publishingHouse?.name,
   }));
 
   return <Table dataSource={dataSource} columns={columns} />;
