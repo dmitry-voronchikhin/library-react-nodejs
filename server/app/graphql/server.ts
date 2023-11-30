@@ -1,11 +1,11 @@
 import { ApolloServer } from "apollo-server-express";
 import { Express } from "express";
+import { GraphQLError } from "graphql";
 
 import { EMPTY_STRING } from "../common/constants";
 import { tokenService } from "../services/token.service";
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./schema";
-import { GraphQLError } from "graphql";
 
 export class Apollo {
   expressApp: Express;

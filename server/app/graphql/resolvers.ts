@@ -1,5 +1,6 @@
 import { publishingHouseService } from "../services/publishing-house.service";
 import { booksService } from "../services/books.service";
+import { AddBookInput } from "./types";
 
 export const resolvers = {
   Query: {
@@ -7,7 +8,7 @@ export const resolvers = {
     getAllPublishingHouses: publishingHouseService.getAllPublishingHouses,
   },
   Mutation: {
-    addBook: (parent: any, args: any, context: any, info: any) =>
-      booksService.addBook(args.request),
+    addBook: async (_: never, variables: AddBookInput) =>
+      await booksService.addBook(variables),
   },
 };

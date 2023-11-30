@@ -26,6 +26,6 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addBook(request: AddBookInput): Book
+    addBook(name: String, author: String, publishingHouseId: String): Book
   }
 `;
