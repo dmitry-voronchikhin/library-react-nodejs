@@ -3,11 +3,11 @@ import React from 'react';
 import { LoginLayout, NotFound } from '@app/layouts';
 import { Role } from '@app/api/types';
 import { LoginForm } from '@app/components/LoginForm';
-import { BooksTable } from '@app/components/BooksTable';
 import { MainLayout } from '@app/layouts/MainLayout';
 import { Route } from './types';
 import { MainPage } from '@app/pages/MainPage';
 import { PublishingHouseTable } from '../PublishingHouseTable';
+import { BooksPage } from '@app/pages/BooksPage';
 
 const LoginPage: JSX.Element = (
   <LoginLayout>
@@ -23,7 +23,7 @@ const Main: JSX.Element = (
 
 const Books: JSX.Element = (
   <MainLayout>
-    <BooksTable />
+    <BooksPage />
   </MainLayout>
 );
 
