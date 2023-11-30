@@ -63,9 +63,9 @@ export const createApolloClient = () => {
 
   const apolloLink = ApolloLink.from([
     authLink,
+    errorLink,
     requestParamsLink,
     httpLink,
-    errorLink,
   ]);
 
   return new ApolloClient({

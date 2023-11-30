@@ -7,9 +7,7 @@ export const GET_ALL_BOOKS = gql`
       id
       name
       publishingHouse {
-        id
         name
-        address
       }
     }
   }
