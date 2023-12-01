@@ -3,7 +3,7 @@ import { prisma } from "../prisma";
 
 class BooksService {
   async getAllBooks() {
-    const books = await prisma.book.findMany({
+    return await prisma.book.findMany({
       select: {
         name: true,
         author: true,
@@ -15,8 +15,6 @@ class BooksService {
         },
       },
     });
-    console.log(books);
-    return books;
   }
 
   async addBook(request: AddBookInput) {

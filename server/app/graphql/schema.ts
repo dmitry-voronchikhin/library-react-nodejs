@@ -1,11 +1,25 @@
 import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
+  enum ResultStatusEnum {
+    OK
+    ERROR
+  }
+
+  type ResultStatus {
+    status: ResultStatusEnum
+  }
+
   type Book {
     id: String
     name: String
     author: String
     publishingHouse: PublishingHouse
+  }
+
+  type AddBookOutput {
+    book: Book
+    result: ResultStatus
   }
 
   type PublishingHouse {
@@ -26,6 +40,10 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addBook(name: String, author: String, publishingHouseId: String): Book
+    addBook(
+      name: String
+      author: String
+      publishingHouseId: String
+    ): AddBookOutput
   }
 `;

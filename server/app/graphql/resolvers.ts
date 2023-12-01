@@ -8,7 +8,23 @@ export const resolvers = {
     getAllPublishingHouses: publishingHouseService.getAllPublishingHouses,
   },
   Mutation: {
-    addBook: async (_: never, variables: AddBookInput) =>
-      await booksService.addBook(variables),
+    addBook: async (_: never, variables: AddBookInput) => {
+      try {
+        const book = await booksService.addBook(variables);
+
+        return {
+          book,
+          result: {
+            status: "OK",
+          },
+        };
+      } catch {
+        return {
+          result: {
+            status: "ERROR",
+          },
+        };
+      }
+    },
   },
 };
