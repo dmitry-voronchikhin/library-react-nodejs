@@ -16,6 +16,7 @@ import { GET_ALL_BOOKS } from '@app/graphql/queries';
 import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
 import { REMOVE_BOOK } from '@app/graphql/mutations/removeBook';
 import { openNotification } from '@app/utils';
+import Skeleton from 'react-loading-skeleton';
 
 type Action = 'REMOVE';
 
@@ -75,7 +76,7 @@ const BooksTableComponent: FC = () => {
   };
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Skeleton height={400} />;
   }
 
   const { Column } = Table;

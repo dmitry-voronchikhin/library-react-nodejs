@@ -1,3 +1,4 @@
+import 'react-loading-skeleton/dist/skeleton.css';
 import React, { FC, createContext, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
