@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
 import { BooksTable } from './BooksTable';
+import { AddBookForm } from './AddBookForm';
 import { Card } from 'antd';
 
 import styles from './styles.module.scss';
-import { AddBookForm } from './AddBookForm';
 
 export const BooksPage: FC = () => {
   return (

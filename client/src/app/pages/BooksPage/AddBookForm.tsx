@@ -7,7 +7,8 @@ import {
   AddBookMutationVariables,
   GetAllPublishingHousesQuery,
   GetAllPublishingHousesQueryVariables,
-} from '@app/graphql/types';
+  ResultStatusEnum,
+} from '@app/graphql/types.d';
 import { Option as OptionType } from '@app/types';
 import { GET_ALL_PUBLISHING_HOUSES } from '@app/graphql/queries';
 import { ADD_BOOK } from '@app/graphql/mutations';
@@ -61,12 +62,19 @@ export const AddBookForm: FC = () => {
       },
       refetchQueries: ['getAllBooks'],
       onCompleted: (data) => {
-        form.resetFields();
-        openNotification(
-          EMPTY_STRING,
-          `Книга ${data.addBook?.name || EMPTY_STRING} успешно добавлена`,
-          'success',
-        );
+        if (data.addBook?.result?.status === ResultStatusEnum.Ok) {
+          form.resetFields();
+          openNotification(
+            EMPTY_STRING,
+            `Книга ${
+              data.addBook?.book?.name || EMPTY_STRING
+            } успешно добавлена`,
+            'success',
+          );
+          return;
+        }
+
+        throw new Error();
       },
       onError: () => {
         openNotification(
@@ -83,6 +91,7 @@ export const AddBookForm: FC = () => {
       <Typography.Title level={4}>Добавить книгу</Typography.Title>
       <div className={styles.FormItemsContainer}>
         <Form.Item
+          className={styles.FormItem}
           name="bookName"
           rules={[
             {
@@ -94,6 +103,7 @@ export const AddBookForm: FC = () => {
           <Input placeholder="Название книги" type="text" size="large" />
         </Form.Item>
         <Form.Item
+          className={styles.FormItem}
           name="authorName"
           rules={[
             {
@@ -105,6 +115,7 @@ export const AddBookForm: FC = () => {
           <Input placeholder="Автор" type="text" size="large" />
         </Form.Item>
         <Form.Item
+          className={styles.FormItem}
           name="publishingHouse"
           rules={[
             {
@@ -128,7 +139,7 @@ export const AddBookForm: FC = () => {
           />
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item className={styles.FormItem}>
           <Button
             type="primary"
             htmlType="submit"

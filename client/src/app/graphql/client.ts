@@ -42,6 +42,7 @@ export const createApolloClient = () => {
             return fromPromise(
               tokenRequest.refresh().then((response) => {
                 sessionStorage.setItem('token', response.data.accessToken);
+                return response.data.accessToken;
               }),
             )
               .filter((value) => Boolean(value))
