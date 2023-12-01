@@ -5,29 +5,29 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
-import {
-  DEFAULT_TECHNICAL_ERROR,
-  EMPTY_STRING,
-  WARNING_TITLE,
-} from '@constants';
+import { DEFAULT_TECHNICAL_ERROR, WARNING_TITLE } from '@constants';
 import { ErrorResponse } from '@app/api/types';
 import { openNotification } from '@app/utils';
 import { Context } from '@app/App';
 
 import styles from './styles.module.scss';
 
+type LoginFormFields = {
+  email: string;
+  password: string;
+};
+
 export const LoginFormComponent: FC = () => {
-  const [email, setEmail] = useState<string>(EMPTY_STRING);
-  const [password, setPassword] = useState<string>(EMPTY_STRING);
+  const [form] = Form.useForm<LoginFormFields>();
   const [loading, setLoading] = useState<boolean>(false);
   const { store } = useContext(Context);
   const navigate = useNavigate();
 
-  const onSubmit = async () => {
+  const onSubmit = async (values: LoginFormFields) => {
     setLoading(true);
 
     store
-      .login(email, password)
+      .login(values.email, values.password)
       .then(() => {
         navigate('/');
       })
@@ -46,7 +46,7 @@ export const LoginFormComponent: FC = () => {
   };
 
   return (
-    <Form name="basic" onFinish={onSubmit}>
+    <Form form={form} name="basic" onFinish={onSubmit}>
       <Typography.Title>Вход в систему</Typography.Title>
       <Form.Item
         name="email"
@@ -62,10 +62,6 @@ export const LoginFormComponent: FC = () => {
           type="text"
           placeholder="Email"
           size="large"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
           prefix={<UserOutlined />}
         />
       </Form.Item>
@@ -77,10 +73,6 @@ export const LoginFormComponent: FC = () => {
           type="password"
           placeholder="Пароль"
           size="large"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
           prefix={<LockOutlined />}
         />
       </Form.Item>
