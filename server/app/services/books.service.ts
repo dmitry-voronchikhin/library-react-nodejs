@@ -1,4 +1,4 @@
-import { AddBookInput } from "../graphql/types";
+import { AddBookInput, RemoveBookInput } from "../graphql/types";
 import { prisma } from "../prisma";
 
 class BooksService {
@@ -19,15 +19,22 @@ class BooksService {
 
   async addBook(request: AddBookInput) {
     const { name, publishingHouseId, author } = request;
-    const book = await prisma.book.create({
+    return await prisma.book.create({
       data: {
         name,
         publishingHouseId,
         author,
       },
     });
+  }
 
-    return book;
+  async removeBook(request: RemoveBookInput) {
+    const { id } = request;
+    return await prisma.book.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
 

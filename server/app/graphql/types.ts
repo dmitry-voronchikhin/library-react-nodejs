@@ -3,3 +3,7 @@ export type AddBookInput = {
   publishingHouseId: string;
   author: string;
 };
+
+export type RemoveBookInput = {
+  id: string;
+};

@@ -17,11 +17,6 @@ export const typeDefs = gql`
     publishingHouse: PublishingHouse
   }
 
-  type AddBookOutput {
-    book: Book
-    result: ResultStatus
-  }
-
   type PublishingHouse {
     id: String
     name: String
@@ -32,6 +27,20 @@ export const typeDefs = gql`
     name: String
     publishingHouseId: String
     author: String
+  }
+
+  type AddBookOutput {
+    book: Book
+    result: ResultStatus
+  }
+
+  type RemoveBookInput {
+    id: String
+  }
+
+  type RemoveBookOutput {
+    book: Book
+    result: ResultStatus
   }
 
   type Query {
@@ -45,5 +54,6 @@ export const typeDefs = gql`
       author: String
       publishingHouseId: String
     ): AddBookOutput
+    removeBook(id: String): RemoveBookOutput
   }
 `;
