@@ -1,9 +1,22 @@
-import { AddBookInput, RemoveBookInput } from "../graphql/types";
+import {
+  AddBookInput,
+  GetAllBooksInput,
+  RemoveBookInput,
+} from "../graphql/types";
 import { prisma } from "../prisma";
 
 class BooksService {
-  async getAllBooks() {
+  async getAllBooksCount() {
+    return (await prisma.book.findMany()).length;
+  }
+  async getAllBooks(request: GetAllBooksInput) {
+    const { page, count } = request;
     return await prisma.book.findMany({
+      ...(page &&
+        count && {
+          skip: (page - 1) * count,
+          take: count,
+        }),
       select: {
         name: true,
         author: true,

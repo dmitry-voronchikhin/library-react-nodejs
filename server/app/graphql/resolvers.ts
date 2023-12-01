@@ -1,10 +1,18 @@
 import { publishingHouseService } from "../services/publishing-house.service";
 import { booksService } from "../services/books.service";
-import { AddBookInput, RemoveBookInput } from "./types";
+import { AddBookInput, GetAllBooksInput, RemoveBookInput } from "./types";
 
 export const resolvers = {
   Query: {
-    getAllBooks: booksService.getAllBooks,
+    getAllBooks: async (_: any, variables: GetAllBooksInput) => {
+      const books = await booksService.getAllBooks(variables);
+      const count = await booksService.getAllBooksCount();
+
+      return {
+        books,
+        count,
+      };
+    },
     getAllPublishingHouses: publishingHouseService.getAllPublishingHouses,
   },
   Mutation: {

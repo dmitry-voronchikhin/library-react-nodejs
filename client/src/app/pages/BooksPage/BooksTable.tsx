@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
@@ -18,6 +18,8 @@ import { REMOVE_BOOK } from '@app/graphql/mutations/removeBook';
 import { openNotification } from '@app/utils';
 import Skeleton from 'react-loading-skeleton';
 
+const PAGE_SIZE = 10;
+
 type Action = 'REMOVE';
 
 type DataType = {
@@ -29,10 +31,17 @@ type DataType = {
 };
 
 const BooksTableComponent: FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
   const { data, loading } = useQuery<
     GetAllBooksQuery,
     GetAllBooksQueryVariables
-  >(GET_ALL_BOOKS);
+  >(GET_ALL_BOOKS, {
+    variables: {
+      page: currentPage,
+      count: PAGE_SIZE,
+    },
+  });
 
   const [removeBookRequest, { loading: rbLoading }] = useMutation<
     RemoveBookMutation,
@@ -81,7 +90,7 @@ const BooksTableComponent: FC = () => {
 
   const { Column } = Table;
 
-  const books: Book[] = compact(data?.getAllBooks);
+  const books: Book[] = compact(data?.getAllBooks?.books);
 
   const columns = [
     {
@@ -117,7 +126,18 @@ const BooksTableComponent: FC = () => {
   );
 
   return (
-    <Table dataSource={dataSource}>
+    <Table
+      dataSource={dataSource}
+      pagination={{
+        hideOnSinglePage: true,
+        current: currentPage,
+        pageSize: PAGE_SIZE,
+        total: data?.getAllBooks?.count || 0,
+        onChange: (page) => {
+          setCurrentPage(page);
+        },
+      }}
+    >
       {columns.map((column) => {
         if (column.key === 'actions') {
           return (

@@ -38,6 +38,18 @@ export type Book = {
   publishingHouse?: Maybe<PublishingHouse>;
 };
 
+export type GetAllBooksInput = {
+  count?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
+};
+
+export type GetAllBooksOutput = {
+  __typename?: 'GetAllBooksOutput';
+  books?: Maybe<Array<Maybe<Book>>>;
+  count?: Maybe<Scalars['Int']>;
+  page?: Maybe<Scalars['Int']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
@@ -63,8 +75,13 @@ export type PublishingHouse = {
 
 export type Query = {
   __typename?: 'Query';
-  getAllBooks?: Maybe<Array<Maybe<Book>>>;
+  getAllBooks?: Maybe<GetAllBooksOutput>;
   getAllPublishingHouses?: Maybe<Array<Maybe<PublishingHouse>>>;
+};
+
+export type QueryGetAllBooksArgs = {
+  count?: InputMaybe<Scalars['Int']>;
+  page?: InputMaybe<Scalars['Int']>;
 };
 
 export type RemoveBookInput = {
@@ -126,20 +143,27 @@ export type RemoveBookMutation = {
   } | null;
 };
 
-export type GetAllBooksQueryVariables = Exact<{ [key: string]: never }>;
+export type GetAllBooksQueryVariables = Exact<{
+  page?: InputMaybe<Scalars['Int']>;
+  count?: InputMaybe<Scalars['Int']>;
+}>;
 
 export type GetAllBooksQuery = {
   __typename?: 'Query';
-  getAllBooks?: Array<{
-    __typename?: 'Book';
-    author?: string | null;
-    id?: string | null;
-    name?: string | null;
-    publishingHouse?: {
-      __typename?: 'PublishingHouse';
+  getAllBooks?: {
+    __typename?: 'GetAllBooksOutput';
+    count?: number | null;
+    books?: Array<{
+      __typename?: 'Book';
+      author?: string | null;
+      id?: string | null;
       name?: string | null;
-    } | null;
-  } | null> | null;
+      publishingHouse?: {
+        __typename?: 'PublishingHouse';
+        name?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
 };
 
 export type GetAllPublishingHousesQueryVariables = Exact<{
