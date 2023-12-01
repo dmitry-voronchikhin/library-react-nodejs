@@ -1,15 +1,31 @@
 import React, { FC } from 'react';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
+import { Button, Table } from 'antd';
 
 import {
   Book,
   GetAllBooksQuery,
   GetAllBooksQueryVariables,
-} from '@app/graphql/types';
+  RemoveBookMutation,
+  RemoveBookMutationVariables,
+  ResultStatusEnum,
+} from '@app/graphql/types.d';
 import { GET_ALL_BOOKS } from '@app/graphql/queries';
-import { Table } from 'antd';
+import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
+import { REMOVE_BOOK } from '@app/graphql/mutations/removeBook';
+import { openNotification } from '@app/utils';
+
+type Action = 'REMOVE';
+
+type DataType = {
+  key: string;
+  name: string;
+  author: string;
+  publishingHouse: string;
+  actions: Action[];
+};
 
 const BooksTableComponent: FC = () => {
   const { data, loading } = useQuery<
@@ -17,9 +33,52 @@ const BooksTableComponent: FC = () => {
     GetAllBooksQueryVariables
   >(GET_ALL_BOOKS);
 
+  const [removeBookRequest, { loading: rbLoading }] = useMutation<
+    RemoveBookMutation,
+    RemoveBookMutationVariables
+  >(REMOVE_BOOK);
+
+  const removeBook = (id: string, name: string) => {
+    const result = confirm(`Удалить книгу ${name} ?`);
+
+    if (!result) {
+      return;
+    }
+
+    removeBookRequest({
+      variables: {
+        id,
+      },
+      refetchQueries: ['getAllBooks'],
+      onCompleted: (data) => {
+        if (data.removeBook?.result?.status === ResultStatusEnum.Ok) {
+          openNotification(
+            EMPTY_STRING,
+            `Книга ${
+              data.removeBook?.book?.name || EMPTY_STRING
+            } успешно удалена`,
+            'success',
+          );
+          return;
+        }
+
+        throw new Error();
+      },
+      onError: () => {
+        openNotification(
+          WARNING_TITLE,
+          'Произошла ошибка при удалении книги',
+          'error',
+        );
+      },
+    });
+  };
+
   if (loading) {
     return <h1>Loading...</h1>;
   }
+
+  const { Column } = Table;
 
   const books: Book[] = compact(data?.getAllBooks);
 
@@ -39,16 +98,60 @@ const BooksTableComponent: FC = () => {
       dataIndex: 'publishingHouse',
       key: 'publishingHouse',
     },
+    {
+      title: EMPTY_STRING,
+      dataIndex: 'actions',
+      key: 'actions',
+    },
   ];
 
-  const dataSource = books.map(({ id, name, author, publishingHouse }) => ({
-    key: id,
-    name,
-    author,
-    publishingHouse: publishingHouse?.name,
-  }));
+  const dataSource: DataType[] = books.map(
+    ({ id, name, author, publishingHouse }) => ({
+      key: id || '',
+      name: name || '-',
+      author: author || '-',
+      publishingHouse: publishingHouse?.name || '-',
+      actions: ['REMOVE'],
+    }),
+  );
 
-  return <Table dataSource={dataSource} columns={columns} />;
+  return (
+    <Table dataSource={dataSource}>
+      {columns.map((column) => {
+        if (column.key === 'actions') {
+          return (
+            <Column
+              key={column.key}
+              title={column.title}
+              dataIndex={column.dataIndex}
+              width={72}
+              render={(actions: string[], record: DataType) => (
+                <>
+                  {actions.includes('REMOVE') && (
+                    <Button
+                      type="ghost"
+                      onClick={(): void => removeBook(record.key, record.name)}
+                      disabled={rbLoading}
+                    >
+                      X
+                    </Button>
+                  )}
+                </>
+              )}
+            />
+          );
+        }
+
+        return (
+          <Column
+            key={column.key}
+            title={column.title}
+            dataIndex={column.dataIndex}
+          />
+        );
+      })}
+    </Table>
+  );
 };
 
 export const BooksTable = observer(BooksTableComponent);

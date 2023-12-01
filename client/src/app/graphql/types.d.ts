@@ -41,12 +41,17 @@ export type Book = {
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
+  removeBook?: Maybe<RemoveBookOutput>;
 };
 
 export type MutationAddBookArgs = {
   author?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   publishingHouseId?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationRemoveBookArgs = {
+  id?: InputMaybe<Scalars['String']>;
 };
 
 export type PublishingHouse = {
@@ -60,6 +65,17 @@ export type Query = {
   __typename?: 'Query';
   getAllBooks?: Maybe<Array<Maybe<Book>>>;
   getAllPublishingHouses?: Maybe<Array<Maybe<PublishingHouse>>>;
+};
+
+export type RemoveBookInput = {
+  __typename?: 'RemoveBookInput';
+  id?: Maybe<Scalars['String']>;
+};
+
+export type RemoveBookOutput = {
+  __typename?: 'RemoveBookOutput';
+  book?: Maybe<Book>;
+  result?: Maybe<ResultStatus>;
 };
 
 export type ResultStatus = {
@@ -87,6 +103,22 @@ export type AddBookMutation = {
       name?: string | null;
       author?: string | null;
     } | null;
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
+export type RemoveBookMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+}>;
+
+export type RemoveBookMutation = {
+  __typename?: 'Mutation';
+  removeBook?: {
+    __typename?: 'RemoveBookOutput';
+    book?: { __typename?: 'Book'; name?: string | null } | null;
     result?: {
       __typename?: 'ResultStatus';
       status?: ResultStatusEnum | null;
