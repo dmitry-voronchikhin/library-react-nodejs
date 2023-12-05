@@ -34,8 +34,8 @@ const PublishingHouseTableComponent: FC = () => {
     },
     {
       title: 'Адрес',
-      dataIndex: 'author',
-      key: 'author',
+      dataIndex: 'address',
+      key: 'address',
     },
   ];
 
