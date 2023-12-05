@@ -54,6 +54,25 @@ export const typeDefs = gql`
     result: ResultStatus
   }
 
+  input AddPublishingHouseInput {
+    name: String
+    address: String
+  }
+
+  type AddPublishingHouseOutput {
+    publishingHouse: PublishingHouse
+    result: ResultStatus
+  }
+
+  type RemovePublishingHouseInput {
+    id: String
+  }
+
+  type RemovePublishingHouseOutput {
+    publishingHouse: PublishingHouse
+    result: ResultStatus
+  }
+
   type Query {
     getAllBooks(page: Int, count: Int): GetAllBooksOutput
     getAllPublishingHouses: [PublishingHouse]
@@ -66,5 +85,7 @@ export const typeDefs = gql`
       publishingHouseId: String
     ): AddBookOutput
     removeBook(id: String): RemoveBookOutput
+    addPublishingHouse(name: String, address: String): AddPublishingHouseOutput
+    removePublishingHouse(id: String): RemovePublishingHouseOutput
   }
 `;
