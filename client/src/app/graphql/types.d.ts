@@ -196,6 +196,25 @@ export type RemoveBookMutation = {
   } | null;
 };
 
+export type RemovePublishingHouseMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+}>;
+
+export type RemovePublishingHouseMutation = {
+  __typename?: 'Mutation';
+  removePublishingHouse?: {
+    __typename?: 'RemovePublishingHouseOutput';
+    publishingHouse?: {
+      __typename?: 'PublishingHouse';
+      name?: string | null;
+    } | null;
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
 export type GetAllBooksQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']>;
   count?: InputMaybe<Scalars['Int']>;
