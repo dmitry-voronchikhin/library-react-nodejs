@@ -11,6 +11,7 @@ import {
 export const resolvers = {
   Query: {
     getAllBooks: async (_: any, variables: GetAllBooksInput) => {
+      console.log("getAllBooks");
       const books = await booksService.getAllBooks(variables);
       const count = await booksService.getAllBooksCount();
 

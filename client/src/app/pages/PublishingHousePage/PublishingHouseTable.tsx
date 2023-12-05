@@ -81,7 +81,7 @@ const PublishingHouseTableComponent: FC = () => {
   }
 
   const publishingHouses: PublishingHouse[] = compact(
-    data?.getAllPublishingHouses,
+    data?.getAllPublishingHouses?.publishingHouses,
   );
 
   const columns = [

@@ -61,6 +61,11 @@ export type GetAllBooksOutput = {
   page?: Maybe<Scalars['Int']>;
 };
 
+export type GetAllPublishingHousesOutput = {
+  __typename?: 'GetAllPublishingHousesOutput';
+  publishingHouses?: Maybe<Array<Maybe<PublishingHouse>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
@@ -98,7 +103,7 @@ export type PublishingHouse = {
 export type Query = {
   __typename?: 'Query';
   getAllBooks?: Maybe<GetAllBooksOutput>;
-  getAllPublishingHouses?: Maybe<Array<Maybe<PublishingHouse>>>;
+  getAllPublishingHouses?: Maybe<GetAllPublishingHousesOutput>;
 };
 
 export type QueryGetAllBooksArgs = {
@@ -244,10 +249,13 @@ export type GetAllPublishingHousesQueryVariables = Exact<{
 
 export type GetAllPublishingHousesQuery = {
   __typename?: 'Query';
-  getAllPublishingHouses?: Array<{
-    __typename?: 'PublishingHouse';
-    id?: string | null;
-    name?: string | null;
-    address?: string | null;
-  } | null> | null;
+  getAllPublishingHouses?: {
+    __typename?: 'GetAllPublishingHousesOutput';
+    publishingHouses?: Array<{
+      __typename?: 'PublishingHouse';
+      id?: string | null;
+      name?: string | null;
+      address?: string | null;
+    } | null> | null;
+  } | null;
 };

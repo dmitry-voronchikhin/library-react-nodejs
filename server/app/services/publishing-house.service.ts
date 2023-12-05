@@ -6,7 +6,11 @@ import { prisma } from "../prisma";
 
 class PublishingHouseService {
   async getAllPublishingHouses() {
-    return await prisma.publishingHouse.findMany();
+    const ph = await prisma.publishingHouse.findMany();
+
+    return {
+      publishingHouses: ph,
+    };
   }
 
   async addPublishingHouse(request: AddPublishingHouseInput) {

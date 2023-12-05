@@ -54,6 +54,10 @@ export const typeDefs = gql`
     result: ResultStatus
   }
 
+  type GetAllPublishingHousesOutput {
+    publishingHouses: [PublishingHouse]
+  }
+
   input AddPublishingHouseInput {
     name: String
     address: String
@@ -75,7 +79,7 @@ export const typeDefs = gql`
 
   type Query {
     getAllBooks(page: Int, count: Int): GetAllBooksOutput
-    getAllPublishingHouses: [PublishingHouse]
+    getAllPublishingHouses: GetAllPublishingHousesOutput
   }
 
   type Mutation {

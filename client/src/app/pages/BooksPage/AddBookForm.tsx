@@ -37,7 +37,7 @@ export const AddBookForm: FC = () => {
 
   const publishingHouseOptions: OptionType[] = useMemo(() => {
     return (
-      phData?.getAllPublishingHouses
+      phData?.getAllPublishingHouses?.publishingHouses
         ?.filter((item) => !!(item?.id && item.name))
         .map((item) => {
           return {
