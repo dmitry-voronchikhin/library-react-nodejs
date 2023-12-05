@@ -7,6 +7,7 @@ import {
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
+
 import { tokenRequest } from '@app/api/user/token.request';
 
 export const createApolloClient = () => {
@@ -70,7 +71,7 @@ export const createApolloClient = () => {
   ]);
 
   return new ApolloClient({
-    cache: cache,
+    cache,
     queryDeduplication: true,
     link: apolloLink,
     uri: API_URL,

@@ -33,7 +33,9 @@ export const AddBookForm: FC = () => {
   } = useQuery<
     GetAllPublishingHousesQuery,
     GetAllPublishingHousesQueryVariables
-  >(GET_ALL_PUBLISHING_HOUSES);
+  >(GET_ALL_PUBLISHING_HOUSES, {
+    fetchPolicy: 'cache-first',
+  });
 
   const publishingHouseOptions: OptionType[] = useMemo(() => {
     return (

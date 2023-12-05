@@ -41,6 +41,7 @@ const BooksTableComponent: FC = () => {
       page: currentPage,
       count: PAGE_SIZE,
     },
+    fetchPolicy: 'cache-first',
   });
 
   const [removeBookRequest, { loading: rbLoading }] = useMutation<
