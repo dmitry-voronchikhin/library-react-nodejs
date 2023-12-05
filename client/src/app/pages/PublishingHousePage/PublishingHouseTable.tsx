@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import { useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
+import { Table } from 'antd';
+import Skeleton from 'react-loading-skeleton';
 
 import {
   GetAllPublishingHousesQuery,
@@ -9,7 +11,6 @@ import {
   PublishingHouse,
 } from '@app/graphql/types';
 import { GET_ALL_PUBLISHING_HOUSES } from '@app/graphql/queries';
-import { Table } from 'antd';
 
 const PublishingHouseTableComponent: FC = () => {
   const { data, loading } = useQuery<
@@ -18,7 +19,7 @@ const PublishingHouseTableComponent: FC = () => {
   >(GET_ALL_PUBLISHING_HOUSES);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Skeleton height={400} />;
   }
 
   const publishingHouses: PublishingHouse[] = compact(

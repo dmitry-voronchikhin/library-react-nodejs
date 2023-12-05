@@ -1,0 +1,1 @@
+export { PublishingHousePage } from './PublishingHousePage';

@@ -1,1 +1,0 @@
-export { PublishingHouseTable } from './PublishingHouseTable';

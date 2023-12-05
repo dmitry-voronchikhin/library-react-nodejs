@@ -6,8 +6,8 @@ import { LoginForm } from '@app/components/LoginForm';
 import { MainLayout } from '@app/layouts/MainLayout';
 import { Route } from './types';
 import { MainPage } from '@app/pages/MainPage';
-import { PublishingHouseTable } from '../PublishingHouseTable';
 import { BooksPage } from '@app/pages/BooksPage';
+import { PublishingHousePage } from '@app/pages/PublishingHousePage';
 
 const LoginPage: JSX.Element = (
   <LoginLayout>
@@ -29,7 +29,7 @@ const Books: JSX.Element = (
 
 const PublishingHouses: JSX.Element = (
   <MainLayout>
-    <PublishingHouseTable />
+    <PublishingHousePage />
   </MainLayout>
 );
 
