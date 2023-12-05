@@ -12,7 +12,10 @@ import { getRoutes } from '@app/components/AppRoutes/routes';
 
 import styles from './styles.module.scss';
 
-const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
+const MainLayoutComponent: FC<{
+  children: ReactNode;
+  contentClassName?: string;
+}> = ({ children, contentClassName }) => {
   const { store } = useContext(Context);
   const routes = getRoutes(store.checkAuth());
 
@@ -56,7 +59,13 @@ const MainLayoutComponent: FC<{ children: ReactNode }> = ({ children }) => {
         </Button>
       </Header>
       <Content className={cn('site-layout', styles.Content)}>
-        <div className={cn('site-layout-background', styles.Content__Body)}>
+        <div
+          className={cn(
+            'site-layout-background',
+            styles.Content__Body,
+            contentClassName,
+          )}
+        >
           {children}
         </div>
       </Content>

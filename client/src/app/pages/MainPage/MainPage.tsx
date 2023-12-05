@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import { LINKS_LIST } from './constants';
 
 import styles from './styles.module.scss';
+import { MainLayout } from '@app/layouts';
 
 export const MainPage: FC = () => {
   return (
-    <div className={styles.Content}>
+    <MainLayout contentClassName={styles.Content}>
       {LINKS_LIST.map((item) => {
         return (
           <Link key={item.id} to={item.link}>
@@ -17,6 +18,6 @@ export const MainPage: FC = () => {
           </Link>
         );
       })}
-    </div>
+    </MainLayout>
   );
 };

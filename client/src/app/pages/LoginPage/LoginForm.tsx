@@ -1,12 +1,10 @@
 import React, { FC, useContext, useState } from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
-import { DEFAULT_TECHNICAL_ERROR, WARNING_TITLE } from '@constants';
-import { ErrorResponse } from '@app/api/types';
+import { WARNING_TITLE } from '@constants';
 import { openNotification } from '@app/utils';
 import { Context } from '@app/App';
 
@@ -31,14 +29,8 @@ export const LoginFormComponent: FC = () => {
       .then(() => {
         navigate('/');
       })
-      .catch((error: AxiosError<ErrorResponse>) => {
-        const errorMessage = error.response?.data?.error?.message;
-
-        openNotification(
-          WARNING_TITLE,
-          errorMessage || DEFAULT_TECHNICAL_ERROR,
-          'error',
-        );
+      .catch(() => {
+        openNotification(WARNING_TITLE, 'Ошибка авторизации', 'error');
       })
       .finally(() => {
         setLoading(false);

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Result } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-export const NotFound: React.FC = () => {
+export const NotFoundPage: React.FC = () => {
   const navigate = useNavigate();
 
   const onClick = () => {

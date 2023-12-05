@@ -2,7 +2,6 @@ import { makeAutoObservable } from 'mobx';
 
 import { userRequest } from '@api/user/user.request';
 import { tokenRequest } from '@api/user/token.request';
-import { openNotification } from '@app/utils';
 
 export class Store {
   isAuth = false;
@@ -21,7 +20,6 @@ export class Store {
       sessionStorage.setItem('token', response.data.accessToken);
       this.setAuth(true);
     } catch (e) {
-      openNotification('Ошибка авторизации', '', 'error');
       this.setAuth(false);
       throw new Error((e as Error).message);
     }

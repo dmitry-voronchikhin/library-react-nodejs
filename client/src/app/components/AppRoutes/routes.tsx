@@ -1,39 +1,14 @@
 import React from 'react';
 
-import { LoginLayout, NotFound } from '@app/layouts';
 import { Role } from '@app/api/types';
-import { LoginForm } from '@app/components/LoginForm';
-import { MainLayout } from '@app/layouts/MainLayout';
 import { Route } from './types';
-import { MainPage } from '@app/pages/MainPage';
-import { BooksPage } from '@app/pages/BooksPage';
-import { PublishingHousePage } from '@app/pages/PublishingHousePage';
-
-const LoginPage: JSX.Element = (
-  <LoginLayout>
-    <LoginForm />
-  </LoginLayout>
-);
-
-const Main: JSX.Element = (
-  <MainLayout>
-    <MainPage />
-  </MainLayout>
-);
-
-const Books: JSX.Element = (
-  <MainLayout>
-    <BooksPage />
-  </MainLayout>
-);
-
-const PublishingHouses: JSX.Element = (
-  <MainLayout>
-    <PublishingHousePage />
-  </MainLayout>
-);
-
-const NotFoundPage: JSX.Element = <NotFound />;
+import {
+  MainPage,
+  BooksPage,
+  PublishingHousePage,
+  LoginPage,
+  NotFoundPage,
+} from '@app/pages';
 
 export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
   ...(!isAuth
@@ -41,7 +16,7 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
         {
           name: 'Авторизация',
           path: '/login',
-          component: LoginPage,
+          component: <LoginPage />,
           inNav: false,
           roles: null,
           isPrivate: false,
@@ -51,7 +26,7 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
   {
     name: 'Главная',
     path: '/',
-    component: Main,
+    component: <MainPage />,
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
     isPrivate: true,
@@ -60,7 +35,7 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
   {
     name: 'Книги',
     path: '/books',
-    component: Books,
+    component: <BooksPage />,
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
     isPrivate: true,
@@ -68,7 +43,7 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
   {
     name: 'Издательства',
     path: '/publishing-houses',
-    component: PublishingHouses,
+    component: <PublishingHousePage />,
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
     isPrivate: true,
@@ -76,7 +51,7 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
   {
     name: '404',
     path: '*',
-    component: NotFoundPage,
+    component: <NotFoundPage />,
     inNav: false,
     roles: [],
     isPrivate: true,
