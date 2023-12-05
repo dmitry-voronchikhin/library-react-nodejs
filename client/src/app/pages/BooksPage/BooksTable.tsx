@@ -3,6 +3,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Button, Table } from 'antd';
+import Skeleton from 'react-loading-skeleton';
 
 import {
   Book,
@@ -14,9 +15,8 @@ import {
 } from '@app/graphql/types.d';
 import { GET_ALL_BOOKS } from '@app/graphql/queries';
 import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
-import { REMOVE_BOOK } from '@app/graphql/mutations/removeBook';
+import { REMOVE_BOOK } from '@app/graphql/mutations';
 import { openNotification } from '@app/utils';
-import Skeleton from 'react-loading-skeleton';
 
 const PAGE_SIZE = 10;
 

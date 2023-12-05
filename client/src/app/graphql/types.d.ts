@@ -30,6 +30,17 @@ export type AddBookOutput = {
   result?: Maybe<ResultStatus>;
 };
 
+export type AddPublishingHouseInput = {
+  address?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type AddPublishingHouseOutput = {
+  __typename?: 'AddPublishingHouseOutput';
+  publishingHouse?: Maybe<PublishingHouse>;
+  result?: Maybe<ResultStatus>;
+};
+
 export type Book = {
   __typename?: 'Book';
   author?: Maybe<Scalars['String']>;
@@ -53,7 +64,9 @@ export type GetAllBooksOutput = {
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
+  addPublishingHouse?: Maybe<AddPublishingHouseOutput>;
   removeBook?: Maybe<RemoveBookOutput>;
+  removePublishingHouse?: Maybe<RemovePublishingHouseOutput>;
 };
 
 export type MutationAddBookArgs = {
@@ -62,7 +75,16 @@ export type MutationAddBookArgs = {
   publishingHouseId?: InputMaybe<Scalars['String']>;
 };
 
+export type MutationAddPublishingHouseArgs = {
+  address?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
 export type MutationRemoveBookArgs = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationRemovePublishingHouseArgs = {
   id?: InputMaybe<Scalars['String']>;
 };
 
@@ -95,6 +117,17 @@ export type RemoveBookOutput = {
   result?: Maybe<ResultStatus>;
 };
 
+export type RemovePublishingHouseInput = {
+  __typename?: 'RemovePublishingHouseInput';
+  id?: Maybe<Scalars['String']>;
+};
+
+export type RemovePublishingHouseOutput = {
+  __typename?: 'RemovePublishingHouseOutput';
+  publishingHouse?: Maybe<PublishingHouse>;
+  result?: Maybe<ResultStatus>;
+};
+
 export type ResultStatus = {
   __typename?: 'ResultStatus';
   status?: Maybe<ResultStatusEnum>;
@@ -119,6 +152,26 @@ export type AddBookMutation = {
       __typename?: 'Book';
       name?: string | null;
       author?: string | null;
+    } | null;
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
+export type AddPublishingHouseMutationVariables = Exact<{
+  name?: InputMaybe<Scalars['String']>;
+  address?: InputMaybe<Scalars['String']>;
+}>;
+
+export type AddPublishingHouseMutation = {
+  __typename?: 'Mutation';
+  addPublishingHouse?: {
+    __typename?: 'AddPublishingHouseOutput';
+    publishingHouse?: {
+      __typename?: 'PublishingHouse';
+      name?: string | null;
     } | null;
     result?: {
       __typename?: 'ResultStatus';
