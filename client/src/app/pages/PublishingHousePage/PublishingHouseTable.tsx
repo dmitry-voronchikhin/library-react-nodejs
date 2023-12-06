@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Button, Table } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 
 import {
@@ -28,6 +28,11 @@ type DataType = {
 };
 
 const PublishingHouseTableComponent: FC = () => {
+  const [removedPHInfo, setRemovedPHInfo] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
   const { data, loading } = useQuery<
     GetAllPublishingHousesQuery,
     GetAllPublishingHousesQueryVariables
@@ -40,13 +45,7 @@ const PublishingHouseTableComponent: FC = () => {
     RemovePublishingHouseMutationVariables
   >(REMOVE_PUBLISHING_HOUSE);
 
-  const removePublishingHouse = (id: string, name: string) => {
-    const result = confirm(`Удалить издательство ${name} ?`);
-
-    if (!result) {
-      return;
-    }
-
+  const removePublishingHouse = (id: string) => {
     removePublishingHouseRequest({
       variables: {
         id,
@@ -116,43 +115,61 @@ const PublishingHouseTableComponent: FC = () => {
   const { Column } = Table;
 
   return (
-    <Table dataSource={dataSource}>
-      {columns.map((column) => {
-        if (column.key === 'actions') {
+    <>
+      <Table dataSource={dataSource}>
+        {columns.map((column) => {
+          if (column.key === 'actions') {
+            return (
+              <Column
+                key={column.key}
+                title={column.title}
+                dataIndex={column.dataIndex}
+                width={72}
+                render={(actions: string[], record: DataType) => (
+                  <>
+                    {actions.includes('REMOVE') && (
+                      <Button
+                        type="ghost"
+                        onClick={(): void => {
+                          setRemovedPHInfo({
+                            id: record.key,
+                            name: record.name,
+                          });
+                        }}
+                        disabled={rphLoading}
+                      >
+                        X
+                      </Button>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+
           return (
             <Column
               key={column.key}
               title={column.title}
               dataIndex={column.dataIndex}
-              width={72}
-              render={(actions: string[], record: DataType) => (
-                <>
-                  {actions.includes('REMOVE') && (
-                    <Button
-                      type="ghost"
-                      onClick={(): void =>
-                        removePublishingHouse(record.key, record.name)
-                      }
-                      disabled={rphLoading}
-                    >
-                      X
-                    </Button>
-                  )}
-                </>
-              )}
             />
           );
-        }
-
-        return (
-          <Column
-            key={column.key}
-            title={column.title}
-            dataIndex={column.dataIndex}
-          />
-        );
-      })}
-    </Table>
+        })}
+      </Table>
+      <Modal
+        open={!!removedPHInfo}
+        onCancel={() => setRemovedPHInfo(null)}
+        onOk={() => {
+          removedPHInfo && removePublishingHouse(removedPHInfo.id);
+          setRemovedPHInfo(null);
+        }}
+      >
+        <p>
+          Вы действительно хотите удалить издательство
+          {' ' + removedPHInfo?.name}?
+        </p>
+      </Modal>
+    </>
   );
 };
 
