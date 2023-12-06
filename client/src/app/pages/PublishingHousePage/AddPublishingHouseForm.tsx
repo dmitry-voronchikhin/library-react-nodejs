@@ -1,62 +1,17 @@
 import { Button, Collapse, Form, Input } from 'antd';
-import { useMutation } from '@apollo/client';
 import React, { FC } from 'react';
 
-import {
-  AddPublishingHouseMutation,
-  AddPublishingHouseMutationVariables,
-  ResultStatusEnum,
-} from '@app/graphql/types.d';
-import { ADD_PUBLISHING_HOUSE } from '@app/graphql/mutations';
-import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
-import { openNotification } from '@app/utils';
+import { useAddPublishingHouse } from './hooks';
 
 import styles from './styles.module.scss';
-
-type PublishingHouseForm = {
-  name: string | undefined;
-  address: string | undefined;
-};
+import { PublishingHouseForm } from './types';
 
 export const AddPublishingHouseForm: FC = () => {
   const [form] = Form.useForm<PublishingHouseForm>();
 
-  const [addPublishingHouseRequest, { loading: aphLoading }] = useMutation<
-    AddPublishingHouseMutation,
-    AddPublishingHouseMutationVariables
-  >(ADD_PUBLISHING_HOUSE);
-
-  const addPublishingHouse = (values: PublishingHouseForm) => {
-    addPublishingHouseRequest({
-      variables: {
-        name: values.name || EMPTY_STRING,
-        address: values.address || EMPTY_STRING,
-      },
-      refetchQueries: ['getAllPublishingHouses'],
-      onCompleted: (data) => {
-        if (data.addPublishingHouse?.result?.status === ResultStatusEnum.Ok) {
-          form.resetFields();
-          openNotification(
-            EMPTY_STRING,
-            `Издательство ${
-              data.addPublishingHouse?.publishingHouse?.name || EMPTY_STRING
-            } успешно добавлено`,
-            'success',
-          );
-          return;
-        }
-
-        throw new Error();
-      },
-      onError: () => {
-        openNotification(
-          WARNING_TITLE,
-          'Произошла ошибка при добавлении издательства',
-          'error',
-        );
-      },
-    });
-  };
+  const { addPublishingHouse, isLoading: aphLoading } = useAddPublishingHouse(
+    () => form.resetFields(),
+  );
 
   return (
     <Collapse bordered={false} className={styles.PublishingHouseCard}>

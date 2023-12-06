@@ -1,22 +1,13 @@
-import React, { FC, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import React, { FC, useMemo, useState } from 'react';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 
-import {
-  GetAllPublishingHousesQuery,
-  GetAllPublishingHousesQueryVariables,
-  PublishingHouse,
-  RemovePublishingHouseMutation,
-  RemovePublishingHouseMutationVariables,
-  ResultStatusEnum,
-} from '@app/graphql/types.d';
-import { GET_ALL_PUBLISHING_HOUSES } from '@app/graphql/queries';
-import { REMOVE_PUBLISHING_HOUSE } from '@app/graphql/mutations';
-import { openNotification } from '@app/utils';
-import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
+import { PublishingHouse } from '@app/graphql/types.d';
+import { EMPTY_STRING } from '@app/constants';
+import { TABLE_COLUMNS } from './constants';
+import { useGetAllPublishingHouses, useRemovePublishingHouse } from './hooks';
 
 type Action = 'REMOVE';
 
@@ -33,91 +24,34 @@ const PublishingHouseTableComponent: FC = () => {
     name: string;
   } | null>(null);
 
-  const { data, loading } = useQuery<
-    GetAllPublishingHousesQuery,
-    GetAllPublishingHousesQueryVariables
-  >(GET_ALL_PUBLISHING_HOUSES, {
-    fetchPolicy: 'cache-first',
-  });
+  const { publishingHouses, isLoading: isPHLoading } =
+    useGetAllPublishingHouses();
+  const { removePublishingHouse, isLoading: rphLoading } =
+    useRemovePublishingHouse();
 
-  const [removePublishingHouseRequest, { loading: rphLoading }] = useMutation<
-    RemovePublishingHouseMutation,
-    RemovePublishingHouseMutationVariables
-  >(REMOVE_PUBLISHING_HOUSE);
+  const preparedPublishingHouses: PublishingHouse[] = compact(publishingHouses);
 
-  const removePublishingHouse = (id: string) => {
-    removePublishingHouseRequest({
-      variables: {
-        id,
-      },
-      refetchQueries: ['getAllPublishingHouses'],
-      onCompleted: (data) => {
-        if (
-          data.removePublishingHouse?.result?.status === ResultStatusEnum.Ok
-        ) {
-          openNotification(
-            EMPTY_STRING,
-            `Издательство ${
-              data.removePublishingHouse?.publishingHouse?.name || EMPTY_STRING
-            } успешно удалено`,
-            'success',
-          );
-          return;
-        }
-
-        throw new Error();
-      },
-      onError: () => {
-        openNotification(
-          WARNING_TITLE,
-          'Произошла ошибка при удалении издательства',
-          'error',
-        );
-      },
-    });
-  };
-
-  if (loading) {
-    return <Skeleton height={400} />;
-  }
-
-  const publishingHouses: PublishingHouse[] = compact(
-    data?.getAllPublishingHouses?.publishingHouses,
-  );
-
-  const columns = [
-    {
-      title: 'Наименование',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Адрес',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: EMPTY_STRING,
-      dataIndex: 'actions',
-      key: 'actions',
-    },
-  ];
-
-  const dataSource: DataType[] = publishingHouses.map(
-    ({ id, name, address }) => ({
-      key: id || EMPTY_STRING,
-      name: name || '-',
-      address: address || '-',
-      actions: ['REMOVE'],
-    }),
+  const dataSource: DataType[] = useMemo(
+    () =>
+      preparedPublishingHouses.map(({ id, name, address }) => ({
+        key: id || EMPTY_STRING,
+        name: name || '-',
+        address: address || '-',
+        actions: ['REMOVE'],
+      })),
+    [preparedPublishingHouses],
   );
 
   const { Column } = Table;
 
+  if (isPHLoading) {
+    return <Skeleton height={400} />;
+  }
+
   return (
     <>
       <Table dataSource={dataSource}>
-        {columns.map((column) => {
+        {TABLE_COLUMNS.map((column) => {
           if (column.key === 'actions') {
             return (
               <Column
