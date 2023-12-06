@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Button, Table } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 
 import {
@@ -31,6 +31,10 @@ type DataType = {
 };
 
 const BooksTableComponent: FC = () => {
+  const [removedBookInfo, setRemovedBookInfo] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, loading } = useQuery<
@@ -49,13 +53,7 @@ const BooksTableComponent: FC = () => {
     RemoveBookMutationVariables
   >(REMOVE_BOOK);
 
-  const removeBook = (id: string, name: string) => {
-    const result = confirm(`Удалить книгу ${name} ?`);
-
-    if (!result) {
-      return;
-    }
-
+  const removeBook = (id: string) => {
     removeBookRequest({
       variables: {
         id,
@@ -127,52 +125,72 @@ const BooksTableComponent: FC = () => {
   );
 
   return (
-    <Table
-      dataSource={dataSource}
-      pagination={{
-        hideOnSinglePage: true,
-        current: currentPage,
-        pageSize: PAGE_SIZE,
-        total: data?.getAllBooks?.count || 0,
-        onChange: (page) => {
-          setCurrentPage(page);
-        },
-      }}
-    >
-      {columns.map((column) => {
-        if (column.key === 'actions') {
+    <>
+      <Table
+        dataSource={dataSource}
+        pagination={{
+          hideOnSinglePage: true,
+          current: currentPage,
+          pageSize: PAGE_SIZE,
+          total: data?.getAllBooks?.count || 0,
+          onChange: (page) => {
+            setCurrentPage(page);
+          },
+        }}
+      >
+        {columns.map((column) => {
+          if (column.key === 'actions') {
+            return (
+              <Column
+                key={column.key}
+                title={column.title}
+                dataIndex={column.dataIndex}
+                width={72}
+                render={(actions: string[], record: DataType) => (
+                  <>
+                    {actions.includes('REMOVE') && (
+                      <Button
+                        type="ghost"
+                        onClick={(): void =>
+                          setRemovedBookInfo({
+                            id: record.key,
+                            name: record.name,
+                          })
+                        }
+                        disabled={rbLoading}
+                      >
+                        X
+                      </Button>
+                    )}
+                  </>
+                )}
+              />
+            );
+          }
+
           return (
             <Column
               key={column.key}
               title={column.title}
               dataIndex={column.dataIndex}
-              width={72}
-              render={(actions: string[], record: DataType) => (
-                <>
-                  {actions.includes('REMOVE') && (
-                    <Button
-                      type="ghost"
-                      onClick={(): void => removeBook(record.key, record.name)}
-                      disabled={rbLoading}
-                    >
-                      X
-                    </Button>
-                  )}
-                </>
-              )}
             />
           );
-        }
-
-        return (
-          <Column
-            key={column.key}
-            title={column.title}
-            dataIndex={column.dataIndex}
-          />
-        );
-      })}
-    </Table>
+        })}
+      </Table>
+      <Modal
+        open={!!removedBookInfo}
+        onCancel={() => setRemovedBookInfo(null)}
+        onOk={() => {
+          removedBookInfo && removeBook(removedBookInfo.id);
+          setRemovedBookInfo(null);
+        }}
+      >
+        <p>
+          Вы действительно хотите удалить книгу
+          {' ' + removedBookInfo?.name}?
+        </p>
+      </Modal>
+    </>
   );
 };
 
