@@ -1,45 +1,30 @@
 import { Button, Collapse, Form, Input, Select } from 'antd';
-import { useMutation, useQuery } from '@apollo/client';
 import React, { FC, useMemo } from 'react';
 
-import {
-  AddBookMutation,
-  AddBookMutationVariables,
-  GetAllPublishingHousesQuery,
-  GetAllPublishingHousesQueryVariables,
-  ResultStatusEnum,
-} from '@app/graphql/types.d';
 import { Option as OptionType } from '@app/types';
-import { GET_ALL_PUBLISHING_HOUSES } from '@app/graphql/queries';
-import { ADD_BOOK } from '@app/graphql/mutations';
-import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
-import { openNotification } from '@app/utils';
+import { EMPTY_STRING } from '@app/constants';
+import { useGetAllPublishingHouses } from '../PublishingHousePage/hooks';
+import { useAddBook } from './hooks';
+import { BookForm } from './types';
 
 import styles from './styles.module.scss';
-
-type BookForm = {
-  bookName: string | undefined;
-  authorName: string | undefined;
-  publishingHouse: string | undefined;
-};
 
 export const AddBookForm: FC = () => {
   const [form] = Form.useForm<BookForm>();
 
   const {
-    data: phData,
-    loading: phLoading,
+    publishingHouses,
+    isLoading: phLoading,
     error: phError,
-  } = useQuery<
-    GetAllPublishingHousesQuery,
-    GetAllPublishingHousesQueryVariables
-  >(GET_ALL_PUBLISHING_HOUSES, {
-    fetchPolicy: 'cache-first',
-  });
+  } = useGetAllPublishingHouses();
+
+  const { addBook, isLoading: abLoading } = useAddBook(() =>
+    form.resetFields(),
+  );
 
   const publishingHouseOptions: OptionType[] = useMemo(() => {
     return (
-      phData?.getAllPublishingHouses?.publishingHouses
+      publishingHouses
         ?.filter((item) => !!(item?.id && item.name))
         .map((item) => {
           return {
@@ -48,45 +33,7 @@ export const AddBookForm: FC = () => {
           };
         }) || []
     );
-  }, [phData]);
-
-  const [addBookRequest, { loading: abLoading }] = useMutation<
-    AddBookMutation,
-    AddBookMutationVariables
-  >(ADD_BOOK);
-
-  const addBook = (values: BookForm) => {
-    addBookRequest({
-      variables: {
-        name: values.bookName || EMPTY_STRING,
-        author: values.authorName || EMPTY_STRING,
-        publishingHouseId: values.publishingHouse || EMPTY_STRING,
-      },
-      refetchQueries: ['getAllBooks'],
-      onCompleted: (data) => {
-        if (data.addBook?.result?.status === ResultStatusEnum.Ok) {
-          form.resetFields();
-          openNotification(
-            EMPTY_STRING,
-            `Книга ${
-              data.addBook?.book?.name || EMPTY_STRING
-            } успешно добавлена`,
-            'success',
-          );
-          return;
-        }
-
-        throw new Error();
-      },
-      onError: () => {
-        openNotification(
-          WARNING_TITLE,
-          'Произошла ошибка при добавлении новой книги',
-          'error',
-        );
-      },
-    });
-  };
+  }, [publishingHouses]);
 
   return (
     <Collapse bordered={false} className={styles.AddBookCard}>

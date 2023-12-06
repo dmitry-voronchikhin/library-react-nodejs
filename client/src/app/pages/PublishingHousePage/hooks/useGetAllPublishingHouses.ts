@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 
 import { GET_ALL_PUBLISHING_HOUSES } from '@app/graphql/queries';
 import {
@@ -10,10 +10,11 @@ import {
 type Result = {
   publishingHouses: (PublishingHouse | null)[];
   isLoading: boolean;
+  error: ApolloError | undefined;
 };
 
 export const useGetAllPublishingHouses = (): Result => {
-  const { data, loading } = useQuery<
+  const { data, loading, error } = useQuery<
     GetAllPublishingHousesQuery,
     GetAllPublishingHousesQueryVariables
   >(GET_ALL_PUBLISHING_HOUSES, {
@@ -28,5 +29,6 @@ export const useGetAllPublishingHouses = (): Result => {
   return {
     publishingHouses,
     isLoading: loading,
+    error,
   };
 };

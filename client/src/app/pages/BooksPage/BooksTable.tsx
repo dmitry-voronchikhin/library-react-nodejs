@@ -1,24 +1,12 @@
-import React, { FC, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import React, { FC, useMemo, useState } from 'react';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 
-import {
-  Book,
-  GetAllBooksQuery,
-  GetAllBooksQueryVariables,
-  RemoveBookMutation,
-  RemoveBookMutationVariables,
-  ResultStatusEnum,
-} from '@app/graphql/types.d';
-import { GET_ALL_BOOKS } from '@app/graphql/queries';
-import { EMPTY_STRING, WARNING_TITLE } from '@app/constants';
-import { REMOVE_BOOK } from '@app/graphql/mutations';
-import { openNotification } from '@app/utils';
-
-const PAGE_SIZE = 10;
+import { Book } from '@app/graphql/types.d';
+import { useGetAllBooks, useRemoveBook } from './hooks';
+import { PAGE_SIZE, TABLE_COLUMNS } from './constants';
 
 type Action = 'REMOVE';
 
@@ -37,84 +25,18 @@ const BooksTableComponent: FC = () => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data, loading } = useQuery<
-    GetAllBooksQuery,
-    GetAllBooksQueryVariables
-  >(GET_ALL_BOOKS, {
-    variables: {
-      page: currentPage,
-      count: PAGE_SIZE,
-    },
-    fetchPolicy: 'cache-first',
-  });
-
-  const [removeBookRequest, { loading: rbLoading }] = useMutation<
-    RemoveBookMutation,
-    RemoveBookMutationVariables
-  >(REMOVE_BOOK);
-
-  const removeBook = (id: string) => {
-    removeBookRequest({
-      variables: {
-        id,
-      },
-      refetchQueries: ['getAllBooks'],
-      onCompleted: (data) => {
-        if (data.removeBook?.result?.status === ResultStatusEnum.Ok) {
-          openNotification(
-            EMPTY_STRING,
-            `Книга ${
-              data.removeBook?.book?.name || EMPTY_STRING
-            } успешно удалена`,
-            'success',
-          );
-          return;
-        }
-
-        throw new Error();
-      },
-      onError: () => {
-        openNotification(
-          WARNING_TITLE,
-          'Произошла ошибка при удалении книги',
-          'error',
-        );
-      },
-    });
-  };
-
-  if (loading) {
-    return <Skeleton height={400} />;
-  }
+  const { books, count, isLoading } = useGetAllBooks({ currentPage });
+  const { removeBook, isLoading: rbLoading } = useRemoveBook();
 
   const { Column } = Table;
 
-  const books: Book[] = compact(data?.getAllBooks?.books);
+  const preparedBooks: Book[] = useMemo(() => compact(books), [books]);
 
-  const columns = [
-    {
-      title: 'Наименование',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Автор',
-      dataIndex: 'author',
-      key: 'author',
-    },
-    {
-      title: 'Издательство',
-      dataIndex: 'publishingHouse',
-      key: 'publishingHouse',
-    },
-    {
-      title: EMPTY_STRING,
-      dataIndex: 'actions',
-      key: 'actions',
-    },
-  ];
+  if (isLoading) {
+    return <Skeleton height={400} />;
+  }
 
-  const dataSource: DataType[] = books.map(
+  const dataSource: DataType[] = preparedBooks.map(
     ({ id, name, author, publishingHouse }) => ({
       key: id || '',
       name: name || '-',
@@ -132,13 +54,13 @@ const BooksTableComponent: FC = () => {
           hideOnSinglePage: true,
           current: currentPage,
           pageSize: PAGE_SIZE,
-          total: data?.getAllBooks?.count || 0,
+          total: count,
           onChange: (page) => {
             setCurrentPage(page);
           },
         }}
       >
-        {columns.map((column) => {
+        {TABLE_COLUMNS.map((column) => {
           if (column.key === 'actions') {
             return (
               <Column
