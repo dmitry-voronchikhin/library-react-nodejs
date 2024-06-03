@@ -7,6 +7,7 @@ import {
   BooksPage,
   PublishingHousePage,
   LoginPage,
+  ReadersPage,
   NotFoundPage,
 } from '@app/pages';
 
@@ -46,6 +47,14 @@ export const getRoutes: (isAuth: boolean) => Route[] = (isAuth) => [
     component: <PublishingHousePage />,
     inNav: true,
     roles: [Role.ADMIN, Role.READER],
+    isPrivate: true,
+  },
+  {
+    name: 'Читатели',
+    path: '/readers',
+    component: <ReadersPage />,
+    inNav: true,
+    roles: [Role.ADMIN],
     isPrivate: true,
   },
   {

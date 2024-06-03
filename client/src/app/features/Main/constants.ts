@@ -11,4 +11,9 @@ export const LINKS_LIST: LinkListItem[] = [
     text: 'Издательства',
     link: '/publishing-houses',
   },
+  {
+    id: 'eddb623c',
+    text: 'Читатели',
+    link: '/readers',
+  },
 ];
