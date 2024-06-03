@@ -18,7 +18,7 @@ type DataType = {
   actions: Action[];
 };
 
-const PublishingHouseTableComponent: FC = () => {
+export const PublishingHouseTable: FC = observer(() => {
   const [removedPHInfo, setRemovedPHInfo] = useState<{
     id: string;
     name: string;
@@ -29,7 +29,10 @@ const PublishingHouseTableComponent: FC = () => {
   const { removePublishingHouse, isLoading: rphLoading } =
     useRemovePublishingHouse();
 
-  const preparedPublishingHouses: PublishingHouse[] = compact(publishingHouses);
+  const preparedPublishingHouses: PublishingHouse[] = useMemo(
+    () => compact(publishingHouses),
+    [publishingHouses],
+  );
 
   const dataSource: DataType[] = useMemo(
     () =>
@@ -99,12 +102,11 @@ const PublishingHouseTableComponent: FC = () => {
         }}
       >
         <p>
-          Вы действительно хотите удалить издательство
-          {' ' + removedPHInfo?.name}?
+          {`Вы действительно хотите удалить издательство ${
+            removedPHInfo?.name || EMPTY_STRING
+          }?`}
         </p>
       </Modal>
     </>
   );
-};
-
-export const PublishingHouseTable = observer(PublishingHouseTableComponent);
+});

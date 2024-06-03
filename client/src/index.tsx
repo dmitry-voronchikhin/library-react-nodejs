@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import 'antd/dist/antd.css';
 
 import { App } from './app';
 
@@ -11,7 +10,7 @@ if (!container) {
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <App />
-  </React.StrictMode>,
+  </StrictMode>,
 );

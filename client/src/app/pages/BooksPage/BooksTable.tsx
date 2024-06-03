@@ -7,6 +7,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Book } from '@app/graphql/types.d';
 import { useGetAllBooks, useRemoveBook } from './hooks';
 import { PAGE_SIZE, TABLE_COLUMNS } from './constants';
+import { EMPTY_STRING } from '@app/constants';
 
 type Action = 'REMOVE';
 
@@ -18,7 +19,7 @@ type DataType = {
   actions: Action[];
 };
 
-const BooksTableComponent: FC = () => {
+export const BooksTable: FC = observer(() => {
   const [removedBookInfo, setRemovedBookInfo] = useState<{
     id: string;
     name: string;
@@ -32,19 +33,21 @@ const BooksTableComponent: FC = () => {
 
   const preparedBooks: Book[] = useMemo(() => compact(books), [books]);
 
+  const dataSource: DataType[] = useMemo(
+    () =>
+      preparedBooks.map(({ id, name, author, publishingHouse }) => ({
+        key: id || '',
+        name: name || '-',
+        author: author || '-',
+        publishingHouse: publishingHouse?.name || '-',
+        actions: ['REMOVE'],
+      })),
+    [preparedBooks],
+  );
+
   if (isLoading) {
     return <Skeleton height={400} />;
   }
-
-  const dataSource: DataType[] = preparedBooks.map(
-    ({ id, name, author, publishingHouse }) => ({
-      key: id || '',
-      name: name || '-',
-      author: author || '-',
-      publishingHouse: publishingHouse?.name || '-',
-      actions: ['REMOVE'],
-    }),
-  );
 
   return (
     <>
@@ -108,12 +111,11 @@ const BooksTableComponent: FC = () => {
         }}
       >
         <p>
-          Вы действительно хотите удалить книгу
-          {' ' + removedBookInfo?.name}?
+          {`Вы действительно хотите удалить книгу ${
+            removedBookInfo?.name || EMPTY_STRING
+          }?`}
         </p>
       </Modal>
     </>
   );
-};
-
-export const BooksTable = observer(BooksTableComponent);
+});

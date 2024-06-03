@@ -15,7 +15,7 @@ type LoginFormFields = {
   password: string;
 };
 
-export const LoginFormComponent: FC = () => {
+export const LoginForm: FC = observer(() => {
   const [form] = Form.useForm<LoginFormFields>();
   const [loading, setLoading] = useState<boolean>(false);
   const { store } = useContext(Context);
@@ -82,6 +82,4 @@ export const LoginFormComponent: FC = () => {
       </Form.Item>
     </Form>
   );
-};
-
-export const LoginForm = observer(LoginFormComponent);
+});

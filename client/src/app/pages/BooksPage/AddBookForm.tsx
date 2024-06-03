@@ -2,10 +2,10 @@ import { Button, Collapse, Form, Input, Select } from 'antd';
 import React, { FC, useMemo } from 'react';
 
 import { Option as OptionType } from '@app/types';
-import { EMPTY_STRING } from '@app/constants';
 import { useGetAllPublishingHouses } from '../PublishingHousePage/hooks';
 import { useAddBook } from './hooks';
 import { BookForm } from './types';
+import { getPublishingHouseSelectOptions } from './utils';
 
 import styles from './styles.module.scss';
 
@@ -22,18 +22,10 @@ export const AddBookForm: FC = () => {
     form.resetFields(),
   );
 
-  const publishingHouseOptions: OptionType[] = useMemo(() => {
-    return (
-      publishingHouses
-        ?.filter((item) => !!(item?.id && item.name))
-        .map((item) => {
-          return {
-            label: item?.name || EMPTY_STRING,
-            value: item?.id || EMPTY_STRING,
-          };
-        }) || []
-    );
-  }, [publishingHouses]);
+  const publishingHouseOptions: OptionType[] = useMemo(
+    () => getPublishingHouseSelectOptions(publishingHouses),
+    [publishingHouses],
+  );
 
   return (
     <Collapse bordered={false} className={styles.AddBookCard}>

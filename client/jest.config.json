@@ -1,16 +1,39 @@
 {
+  "preset": "ts-jest",
   "collectCoverageFrom": [
-    "src /**/*.{js,jsx}"
+    "src/**/*.{js,ts,tsx,jsx}",
+    "!src/**/queries/**",
+    "!src/**/subscriptions/**",
+    "!src/**/mutations/**"
+  ],
+  "moduleFileExtensions": [
+    "js",
+    "jsx",
+    "tsx",
+    "ts",
+    "scss",
+    "graphql"
+  ],
+  "moduleDirectories": [
+    "node_modules"
   ],
   "coverageDirectory": "coverage",
   "testEnvironment": "jest-environment-jsdom",
-  "extensionsToTreatAsEsm": [
-    ".tsx"
-  ],
   "setupFilesAfterEnv": [
     "<rootDir>/jest.setup.js"
   ],
   "transformIgnorePatterns": [
-    "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
-  ]
+    "/node_modules/(?!axios|antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+  ],
+  "moduleNameMapper": {
+    "^@app(.*)": "<rootDir>/src/app",
+    "^@api(.*)": "<rootDir>/src/app/api",
+    "^@components(.*)": "<rootDir>/src/app/components",
+    "^@constants(.*)": "<rootDir>/src/app/constants",
+    "^@store(.*)": "<rootDir>/src/app/store",
+    "\\.(css|scss)$": "identity-obj-proxy"
+  },
+  "transform": {
+    "^.+\\.tsx?$": "ts-jest"
+  }
 }

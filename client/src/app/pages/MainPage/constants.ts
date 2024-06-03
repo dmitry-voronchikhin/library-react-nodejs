@@ -1,8 +1,4 @@
-export type LinkListItem = {
-  id: string;
-  text: string;
-  link: string;
-};
+import { LinkListItem } from './types';
 
 export const LINKS_LIST: LinkListItem[] = [
   {

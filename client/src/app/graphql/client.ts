@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch';
 import {
   ApolloClient,
   ApolloLink,
@@ -16,6 +17,7 @@ export const createApolloClient = () => {
 
   const httpLink = createHttpLink({
     uri: API_URL,
+    fetch,
   });
 
   const authLink = setContext((_, { headers }) => {

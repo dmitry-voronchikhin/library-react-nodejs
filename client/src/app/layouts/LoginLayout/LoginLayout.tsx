@@ -1,10 +1,10 @@
-import React, { FC, ReactElement, ReactNode } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import styles from './styles.module.scss';
 
 const LoginLayoutComponent: FC<{
-  children: ReactNode | ReactElement | null | undefined;
+  children: ReactNode;
 }> = ({ children }) => {
   return (
     <div className={styles.LoginLayout}>

@@ -2,9 +2,9 @@ import { Button, Collapse, Form, Input } from 'antd';
 import React, { FC } from 'react';
 
 import { useAddPublishingHouse } from './hooks';
+import { PublishingHouseForm } from './types';
 
 import styles from './styles.module.scss';
-import { PublishingHouseForm } from './types';
 
 export const AddPublishingHouseForm: FC = () => {
   const [form] = Form.useForm<PublishingHouseForm>();
