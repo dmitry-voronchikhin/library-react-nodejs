@@ -75,7 +75,7 @@ export const BooksTable: FC = observer(() => {
                   <>
                     {actions.includes('REMOVE') && (
                       <Button
-                        type="ghost"
+                        type="text"
                         onClick={(): void =>
                           setRemovedBookInfo({
                             id: record.key,

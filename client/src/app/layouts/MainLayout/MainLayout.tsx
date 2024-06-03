@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useContext, useMemo } from 'react';
 import { Button, Layout, Menu } from 'antd';
 import { Content, Header } from 'antd/lib/layout/layout';
 import { observer } from 'mobx-react-lite';
-import { ItemType } from 'antd/lib/menu/hooks/useItems';
+import { ItemType } from 'antd/es/menu/interface';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { compact } from 'lodash';

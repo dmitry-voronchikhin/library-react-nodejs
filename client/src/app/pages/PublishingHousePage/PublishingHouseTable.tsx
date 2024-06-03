@@ -66,7 +66,7 @@ export const PublishingHouseTable: FC = observer(() => {
                   <>
                     {actions.includes('REMOVE') && (
                       <Button
-                        type="ghost"
+                        type="text"
                         onClick={(): void => {
                           setRemovedPHInfo({
                             id: record.key,
