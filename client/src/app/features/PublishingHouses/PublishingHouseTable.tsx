@@ -8,15 +8,7 @@ import { PublishingHouse } from '@app/graphql/types.d';
 import { EMPTY_STRING } from '@app/constants';
 import { TABLE_COLUMNS } from './constants';
 import { useGetAllPublishingHouses, useRemovePublishingHouse } from './hooks';
-
-type Action = 'REMOVE';
-
-type DataType = {
-  key: string;
-  name: string;
-  address: string;
-  actions: Action[];
-};
+import { DataType } from './types';
 
 export const PublishingHouseTable: FC = observer(() => {
   const [removedPHInfo, setRemovedPHInfo] = useState<{
@@ -54,44 +46,36 @@ export const PublishingHouseTable: FC = observer(() => {
   return (
     <>
       <Table dataSource={dataSource} scroll={{ y: 450 }}>
-        {TABLE_COLUMNS.map((column) => {
-          if (column.key === 'actions') {
-            return (
-              <Column
-                key={column.key}
-                title={column.title}
-                dataIndex={column.dataIndex}
-                width={72}
-                render={(actions: string[], record: DataType) => (
-                  <>
-                    {actions.includes('REMOVE') && (
-                      <Button
-                        type="text"
-                        onClick={(): void => {
-                          setRemovedPHInfo({
-                            id: record.key,
-                            name: record.name,
-                          });
-                        }}
-                        disabled={rphLoading}
-                      >
-                        X
-                      </Button>
-                    )}
-                  </>
-                )}
-              />
-            );
-          }
-
-          return (
-            <Column
-              key={column.key}
-              title={column.title}
-              dataIndex={column.dataIndex}
-            />
-          );
-        })}
+        {TABLE_COLUMNS.map((column) => (
+          <Column
+            key={column.key}
+            title={column.title}
+            dataIndex={column.dataIndex}
+            width={72}
+            {...(column.key === 'actions'
+              ? {
+                  render: (actions: string[], record: DataType) => (
+                    <>
+                      {actions.includes('REMOVE') && (
+                        <Button
+                          type="text"
+                          onClick={(): void => {
+                            setRemovedPHInfo({
+                              id: record.key,
+                              name: record.name,
+                            });
+                          }}
+                          disabled={rphLoading}
+                        >
+                          X
+                        </Button>
+                      )}
+                    </>
+                  ),
+                }
+              : {})}
+          />
+        ))}
       </Table>
       <Modal
         open={!!removedPHInfo}
@@ -101,11 +85,11 @@ export const PublishingHouseTable: FC = observer(() => {
           setRemovedPHInfo(null);
         }}
       >
-        <p>
+        <span>
           {`Вы действительно хотите удалить издательство ${
             removedPHInfo?.name || EMPTY_STRING
           }?`}
-        </p>
+        </span>
       </Modal>
     </>
   );

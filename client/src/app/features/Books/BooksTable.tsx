@@ -8,16 +8,7 @@ import { Book } from '@app/graphql/types.d';
 import { useGetAllBooks, useRemoveBook } from './hooks';
 import { PAGE_SIZE, TABLE_COLUMNS } from './constants';
 import { EMPTY_STRING } from '@app/constants';
-
-type Action = 'REMOVE';
-
-type DataType = {
-  key: string;
-  name: string;
-  author: string;
-  publishingHouse: string;
-  actions: Action[];
-};
+import { DataType } from './types';
 
 export const BooksTable: FC = observer(() => {
   const [removedBookInfo, setRemovedBookInfo] = useState<{
@@ -65,40 +56,35 @@ export const BooksTable: FC = observer(() => {
         scroll={{ y: 450 }}
       >
         {TABLE_COLUMNS.map((column) => {
-          if (column.key === 'actions') {
-            return (
-              <Column
-                key={column.key}
-                title={column.title}
-                dataIndex={column.dataIndex}
-                width={72}
-                render={(actions: string[], record: DataType) => (
-                  <>
-                    {actions.includes('REMOVE') && (
-                      <Button
-                        type="text"
-                        onClick={(): void =>
-                          setRemovedBookInfo({
-                            id: record.key,
-                            name: record.name,
-                          })
-                        }
-                        disabled={rbLoading}
-                      >
-                        X
-                      </Button>
-                    )}
-                  </>
-                )}
-              />
-            );
-          }
-
+          // if (column.key === 'actions') {
           return (
             <Column
               key={column.key}
               title={column.title}
               dataIndex={column.dataIndex}
+              width={72}
+              {...(column.key === 'actions'
+                ? {
+                    render: (actions: string[], record: DataType) => (
+                      <>
+                        {actions.includes('REMOVE') && (
+                          <Button
+                            type="text"
+                            onClick={(): void =>
+                              setRemovedBookInfo({
+                                id: record.key,
+                                name: record.name,
+                              })
+                            }
+                            disabled={rbLoading}
+                          >
+                            X
+                          </Button>
+                        )}
+                      </>
+                    ),
+                  }
+                : {})}
             />
           );
         })}
@@ -111,11 +97,11 @@ export const BooksTable: FC = observer(() => {
           setRemovedBookInfo(null);
         }}
       >
-        <p>
+        <span>
           {`Вы действительно хотите удалить книгу ${
             removedBookInfo?.name || EMPTY_STRING
           }?`}
-        </p>
+        </span>
       </Modal>
     </>
   );

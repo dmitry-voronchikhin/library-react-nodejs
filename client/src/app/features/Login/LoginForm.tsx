@@ -7,13 +7,9 @@ import { observer } from 'mobx-react-lite';
 import { WARNING_TITLE } from '@constants';
 import { openNotification } from '@app/utils';
 import { Context } from '@app/App';
+import { LoginFormFields } from './types';
 
 import styles from './styles.module.scss';
-
-type LoginFormFields = {
-  email: string;
-  password: string;
-};
 
 export const LoginForm: FC = observer(() => {
   const [form] = Form.useForm<LoginFormFields>();

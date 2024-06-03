@@ -1,14 +1,12 @@
 import React, { FC } from 'react';
 
-import { BooksTable } from './BooksTable';
-import { AddBookForm } from './AddBookForm';
 import { MainLayout } from '@app/layouts';
+import { Books } from '@app/features/Books';
 
 export const BooksPage: FC = () => {
   return (
     <MainLayout>
-      <AddBookForm />
-      <BooksTable />
+      <Books />
     </MainLayout>
   );
 };
