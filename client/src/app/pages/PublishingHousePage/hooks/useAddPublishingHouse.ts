@@ -33,24 +33,24 @@ export const useAddPublishingHouse = (onCompleted: () => void): Result => {
         onCompleted: (data) => {
           if (data.addPublishingHouse?.result?.status === ResultStatusEnum.Ok) {
             onCompleted();
-            openNotification(
-              EMPTY_STRING,
-              `Издательство ${
+            openNotification({
+              title: EMPTY_STRING,
+              description: `Издательство ${
                 data.addPublishingHouse?.publishingHouse?.name || EMPTY_STRING
               } успешно добавлено`,
-              'success',
-            );
+              type: 'success',
+            });
             return;
           }
 
           throw new Error();
         },
         onError: () => {
-          openNotification(
-            WARNING_TITLE,
-            'Произошла ошибка при добавлении издательства',
-            'error',
-          );
+          openNotification({
+            title: WARNING_TITLE,
+            description: 'Произошла ошибка при добавлении издательства',
+            type: 'error',
+          });
         },
       });
     },

@@ -3,14 +3,12 @@ import { observer } from 'mobx-react-lite';
 
 import styles from './styles.module.scss';
 
-const LoginLayoutComponent: FC<{
+export const LoginLayout: FC<{
   children: ReactNode;
-}> = ({ children }) => {
+}> = observer(({ children }) => {
   return (
     <div className={styles.LoginLayout}>
       <div className={styles.LoginLayoutContent}>{children}</div>
     </div>
   );
-};
-
-export const LoginLayout = observer(LoginLayoutComponent);
+});

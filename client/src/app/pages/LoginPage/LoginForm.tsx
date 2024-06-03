@@ -30,7 +30,11 @@ export const LoginForm: FC = observer(() => {
         navigate('/');
       })
       .catch(() => {
-        openNotification(WARNING_TITLE, 'Ошибка авторизации', 'error');
+        openNotification({
+          title: WARNING_TITLE,
+          description: 'Ошибка авторизации',
+          type: 'error',
+        });
       })
       .finally(() => {
         setLoading(false);

@@ -12,10 +12,10 @@ import { getRoutes } from '@app/components/AppRoutes/routes';
 
 import styles from './styles.module.scss';
 
-const MainLayoutComponent: FC<{
+export const MainLayout: FC<{
   children: ReactNode;
   contentClassName?: string;
-}> = ({ children, contentClassName }) => {
+}> = observer(({ children, contentClassName }) => {
   const { store } = useContext(Context);
   const routes = getRoutes(store.checkAuth());
 
@@ -71,6 +71,4 @@ const MainLayoutComponent: FC<{
       </Content>
     </Layout>
   );
-};
-
-export const MainLayout = observer(MainLayoutComponent);
+});

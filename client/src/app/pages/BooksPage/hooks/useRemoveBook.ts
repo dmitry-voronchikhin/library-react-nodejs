@@ -30,24 +30,24 @@ export const useRemoveBook = (): Result => {
         refetchQueries: ['getAllBooks'],
         onCompleted: (data) => {
           if (data.removeBook?.result?.status === ResultStatusEnum.Ok) {
-            openNotification(
-              EMPTY_STRING,
-              `Книга ${
+            openNotification({
+              title: EMPTY_STRING,
+              description: `Книга ${
                 data.removeBook?.book?.name || EMPTY_STRING
               } успешно удалена`,
-              'success',
-            );
+              type: 'success',
+            });
             return;
           }
 
           throw new Error();
         },
         onError: () => {
-          openNotification(
-            WARNING_TITLE,
-            'Произошла ошибка при удалении книги',
-            'error',
-          );
+          openNotification({
+            title: WARNING_TITLE,
+            description: 'Произошла ошибка при удалении книги',
+            type: 'error',
+          });
         },
       });
     },

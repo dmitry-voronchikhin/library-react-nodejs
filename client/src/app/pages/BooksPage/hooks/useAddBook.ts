@@ -34,24 +34,24 @@ export const useAddBook = (onComplete: () => void): Result => {
         onCompleted: (data) => {
           if (data.addBook?.result?.status === ResultStatusEnum.Ok) {
             onComplete();
-            openNotification(
-              EMPTY_STRING,
-              `Книга ${
+            openNotification({
+              title: EMPTY_STRING,
+              description: `Книга ${
                 data.addBook?.book?.name || EMPTY_STRING
               } успешно добавлена`,
-              'success',
-            );
+              type: 'success',
+            });
             return;
           }
 
           throw new Error();
         },
         onError: () => {
-          openNotification(
-            WARNING_TITLE,
-            'Произошла ошибка при добавлении новой книги',
-            'error',
-          );
+          openNotification({
+            title: WARNING_TITLE,
+            description: 'Произошла ошибка при добавлении новой книги',
+            type: 'error',
+          });
         },
       });
     },

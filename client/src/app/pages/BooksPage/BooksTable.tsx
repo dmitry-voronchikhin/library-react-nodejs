@@ -62,6 +62,7 @@ export const BooksTable: FC = observer(() => {
             setCurrentPage(page);
           },
         }}
+        scroll={{ y: 450 }}
       >
         {TABLE_COLUMNS.map((column) => {
           if (column.key === 'actions') {

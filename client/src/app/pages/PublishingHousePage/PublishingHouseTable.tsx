@@ -53,7 +53,7 @@ export const PublishingHouseTable: FC = observer(() => {
 
   return (
     <>
-      <Table dataSource={dataSource}>
+      <Table dataSource={dataSource} scroll={{ y: 450 }}>
         {TABLE_COLUMNS.map((column) => {
           if (column.key === 'actions') {
             return (

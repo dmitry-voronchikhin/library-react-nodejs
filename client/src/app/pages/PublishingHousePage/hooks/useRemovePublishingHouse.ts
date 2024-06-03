@@ -32,25 +32,25 @@ export const useRemovePublishingHouse = (): Result => {
           if (
             data.removePublishingHouse?.result?.status === ResultStatusEnum.Ok
           ) {
-            openNotification(
-              EMPTY_STRING,
-              `Издательство ${
+            openNotification({
+              title: EMPTY_STRING,
+              description: `Издательство ${
                 data.removePublishingHouse?.publishingHouse?.name ||
                 EMPTY_STRING
               } успешно удалено`,
-              'success',
-            );
+              type: 'success',
+            });
             return;
           }
 
           throw new Error();
         },
         onError: () => {
-          openNotification(
-            WARNING_TITLE,
-            'Произошла ошибка при удалении издательства',
-            'error',
-          );
+          openNotification({
+            title: WARNING_TITLE,
+            description: 'Произошла ошибка при удалении издательства',
+            type: 'error',
+          });
         },
       });
     },
