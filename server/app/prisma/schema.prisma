@@ -49,11 +49,13 @@ model Book {
   author            String /// Автор книги
   publishingHouse   PublishingHouse @relation(fields: [publishingHouseId], references: [id])
   publishingHouseId String          @map("publishing_house_id")
+  reader            Reader?         @relation(fields: [readerId], references: [id])
+  readerId          String?
 
   @@map("book")
 }
 
-/// Таблица для хранения всех издательств, использющихся в библиотечных книгах
+/// Таблица для хранения всех издательств, использующихся в библиотечных книгах
 model PublishingHouse {
   id      String @id @default(uuid()) /// Уникальный идентификатор
   name    String /// Наименование издательства
@@ -61,6 +63,18 @@ model PublishingHouse {
   books   Book[] /// Книги издательства
 
   @@map("publishing_house")
+}
+
+/// Таблица для хранения всех читателей библиотеки
+model Reader {
+  id          String @id @default(uuid()) /// Уникальный идентификатор
+  name        String /// ФИО читателя
+  address     String /// Адрес места жительства
+  phoneNumber String /// Номер телефона
+  birthDate   String /// Дата рождения
+  books       Book[] /// Книги, которые читатель взял
+
+  @@map("reader")
 }
 
 enum Role {

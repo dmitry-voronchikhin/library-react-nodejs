@@ -77,9 +77,52 @@ export const typeDefs = gql`
     result: ResultStatus
   }
 
+  type Reader {
+    id: String
+    name: String
+    address: String
+    birthDate: String
+    phoneNumber: String
+    books: [Book]
+  }
+
+  type GetAllReadersInput {
+    page: Int
+    count: Int
+  }
+
+  type GetAllReadersOutput {
+    readers: [Reader]
+    page: Int
+    count: Int
+  }
+
+  type AddReaderInput {
+    name: String
+    birthDate: String
+    phoneNumber: String
+    author: String
+    address: String
+  }
+
+  type AddReaderOutput {
+    reader: Reader
+    result: ResultStatus
+  }
+
+  type RemoveReaderInput {
+    id: String
+  }
+
+  type RemoveReaderOutput {
+    reader: Reader
+    result: ResultStatus
+  }
+
   type Query {
     getAllBooks(page: Int, count: Int): GetAllBooksOutput
     getAllPublishingHouses: GetAllPublishingHousesOutput
+    getAllReaders(page: Int, count: Int): GetAllReadersOutput
   }
 
   type Mutation {
@@ -91,5 +134,12 @@ export const typeDefs = gql`
     removeBook(id: String): RemoveBookOutput
     addPublishingHouse(name: String, address: String): AddPublishingHouseOutput
     removePublishingHouse(id: String): RemovePublishingHouseOutput
+    addReader(
+      name: String
+      address: String
+      birthDate: String
+      phoneNumber: String
+    ): AddReaderOutput
+    removeReader(id: String): RemoveReaderOutput
   }
 `;
