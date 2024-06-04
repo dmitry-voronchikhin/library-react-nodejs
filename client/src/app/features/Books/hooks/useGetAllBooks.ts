@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client';
+import { ApolloError, useQuery } from '@apollo/client';
 
 import { GET_ALL_BOOKS } from '@app/graphql/queries';
 import {
@@ -12,6 +12,8 @@ type Result = {
   books: (Book | null)[];
   count: number;
   isLoading: boolean;
+  error: ApolloError | undefined;
+  refetch: () => void;
 };
 
 export const useGetAllBooks = ({
@@ -19,7 +21,7 @@ export const useGetAllBooks = ({
 }: {
   currentPage: number;
 }): Result => {
-  const { data, loading } = useQuery<
+  const { data, loading, error, refetch } = useQuery<
     GetAllBooksQuery,
     GetAllBooksQueryVariables
   >(GET_ALL_BOOKS, {
@@ -41,5 +43,7 @@ export const useGetAllBooks = ({
     books,
     count,
     isLoading: loading,
+    error,
+    refetch,
   };
 };

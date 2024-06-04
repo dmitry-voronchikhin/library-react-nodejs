@@ -1,11 +1,13 @@
 import React, { FC, useMemo, useState } from 'react';
 import { compact } from 'lodash';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
 
 import { PublishingHouse } from '@app/graphql/types.d';
 import { EMPTY_STRING } from '@app/constants';
+import { ErrorResult } from '@app/components/ErrorResult';
 import { TABLE_COLUMNS } from './constants';
 import { useGetAllPublishingHouses, useRemovePublishingHouse } from './hooks';
 import { DataType } from './types';
@@ -16,10 +18,16 @@ export const PublishingHouseTable: FC = observer(() => {
     name: string;
   } | null>(null);
 
-  const { publishingHouses, isLoading: isPHLoading } =
-    useGetAllPublishingHouses();
+  const {
+    publishingHouses,
+    isLoading: isPHLoading,
+    error: phError,
+    refetch,
+  } = useGetAllPublishingHouses();
   const { removePublishingHouse, isLoading: rphLoading } =
     useRemovePublishingHouse();
+
+  const navigate = useNavigate();
 
   const preparedPublishingHouses: PublishingHouse[] = useMemo(
     () => compact(publishingHouses),
@@ -41,6 +49,15 @@ export const PublishingHouseTable: FC = observer(() => {
 
   if (isPHLoading) {
     return <Skeleton height={400} />;
+  }
+
+  if (phError) {
+    return (
+      <ErrorResult
+        onPrimaryButtonClick={refetch}
+        onSecondaryButtonClick={() => navigate('/')}
+      />
+    );
   }
 
   return (

@@ -3,11 +3,13 @@ import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
 import Skeleton from 'react-loading-skeleton';
+import { useNavigate } from 'react-router-dom';
 
 import { Book } from '@app/graphql/types.d';
+import { ErrorResult } from '@app/components/ErrorResult';
+import { EMPTY_STRING } from '@app/constants';
 import { useGetAllBooks, useRemoveBook } from './hooks';
 import { PAGE_SIZE, TABLE_COLUMNS } from './constants';
-import { EMPTY_STRING } from '@app/constants';
 import { DataType } from './types';
 
 export const BooksTable: FC = observer(() => {
@@ -17,8 +19,12 @@ export const BooksTable: FC = observer(() => {
   } | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { books, count, isLoading } = useGetAllBooks({ currentPage });
+  const { books, count, isLoading, error, refetch } = useGetAllBooks({
+    currentPage,
+  });
   const { removeBook, isLoading: rbLoading } = useRemoveBook();
+
+  const navigate = useNavigate();
 
   const { Column } = Table;
 
@@ -38,6 +44,15 @@ export const BooksTable: FC = observer(() => {
 
   if (isLoading) {
     return <Skeleton height={400} />;
+  }
+
+  if (error) {
+    return (
+      <ErrorResult
+        onPrimaryButtonClick={refetch}
+        onSecondaryButtonClick={() => navigate('/')}
+      />
+    );
   }
 
   return (

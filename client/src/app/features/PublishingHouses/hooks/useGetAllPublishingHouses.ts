@@ -11,10 +11,11 @@ type Result = {
   publishingHouses: (PublishingHouse | null)[];
   isLoading: boolean;
   error: ApolloError | undefined;
+  refetch: () => void;
 };
 
 export const useGetAllPublishingHouses = (): Result => {
-  const { data, loading, error } = useQuery<
+  const { data, loading, error, refetch } = useQuery<
     GetAllPublishingHousesQuery,
     GetAllPublishingHousesQueryVariables
   >(GET_ALL_PUBLISHING_HOUSES, {
@@ -30,5 +31,6 @@ export const useGetAllPublishingHouses = (): Result => {
     publishingHouses,
     isLoading: loading,
     error,
+    refetch,
   };
 };
