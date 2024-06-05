@@ -25,14 +25,19 @@ export const EditReaderModal: FC<Props> = ({ isOpen, onClose, reader }) => {
   };
 
   return (
-    <Modal open={isOpen} onCancel={onClose} footer={false}>
+    <Modal
+      open={isOpen}
+      onCancel={onClose}
+      footer={false}
+      title="Редактирование данных читателя"
+    >
       <Form
         form={form}
         name="basic"
         onFinish={onUpdate}
         initialValues={reader}
         labelCol={{
-          span: 10,
+          span: 9,
         }}
       >
         <div className={styles.UpdateReaderFormContainer}>

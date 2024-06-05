@@ -75,7 +75,7 @@ export const ReadersList: FC = observer(() => {
             actions={[
               item.actions.includes('EDIT') && (
                 <Button
-                  type="text"
+                  type="default"
                   onClick={() => {
                     setReaderInfo(item);
                   }}
@@ -86,7 +86,7 @@ export const ReadersList: FC = observer(() => {
               ),
               item.actions.includes('REMOVE') && (
                 <Button
-                  type="text"
+                  type="default"
                   onClick={(): void =>
                     setRemovedReaderInfo({
                       id: item.id,
