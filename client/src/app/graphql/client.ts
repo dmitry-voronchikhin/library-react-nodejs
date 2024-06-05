@@ -6,8 +6,9 @@ import {
   fromPromise,
   InMemoryCache,
 } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+import { ErrorLink } from '@apollo/client/link/error';
 import { setContext } from '@apollo/client/link/context';
+import { RetryLink } from '@apollo/client/link/retry';
 
 import { tokenRequest } from '@app/api/user/token.request';
 
@@ -37,7 +38,7 @@ export const createApolloClient = () => {
     };
   });
 
-  const errorLink = onError(({ graphQLErrors, operation, forward }) => {
+  const errorLink = new ErrorLink(({ graphQLErrors, operation, forward }) => {
     if (graphQLErrors) {
       graphQLErrors.forEach((err) => {
         switch (err.extensions.code) {
@@ -65,7 +66,20 @@ export const createApolloClient = () => {
     }
   });
 
+  const retryLink = new RetryLink({
+    delay: {
+      initial: 300,
+      max: Infinity,
+      jitter: true,
+    },
+    attempts: {
+      max: 5,
+      retryIf: (error) => !!error,
+    },
+  });
+
   const apolloLink = ApolloLink.from([
+    retryLink,
     authLink,
     errorLink,
     requestParamsLink,
