@@ -27,13 +27,17 @@ export type GetAllReadersInput = {
   count: number;
 };
 
-export type AddReaderInput = {
+export type ReaderInput = {
   name: string;
   birthDate: string;
   phoneNumber: string;
   author: string;
   address: string;
 };
+
+export type UpdateReaderInput = {
+  id: string;
+} & ReaderInput;
 
 export type RemoveReaderInput = {
   id: string;

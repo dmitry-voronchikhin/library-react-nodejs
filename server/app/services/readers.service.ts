@@ -1,7 +1,8 @@
 import {
-  AddReaderInput,
+  ReaderInput,
   GetAllReadersInput,
   RemoveReaderInput,
+  UpdateReaderInput,
 } from "app/graphql/types";
 import { prisma } from "../prisma";
 
@@ -33,10 +34,26 @@ class ReadersService {
     });
   }
 
-  async addReader(request: AddReaderInput) {
+  async addReader(request: ReaderInput) {
     const { name, address, birthDate, phoneNumber } = request;
     return await prisma.reader.create({
       data: {
+        name,
+        address,
+        birthDate,
+        phoneNumber,
+      },
+    });
+  }
+
+  async updateReader(request: UpdateReaderInput) {
+    const { id, name, address, birthDate, phoneNumber } = request;
+    return await prisma.reader.update({
+      where: {
+        id,
+      },
+      data: {
+        id,
         name,
         address,
         birthDate,

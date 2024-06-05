@@ -4,12 +4,13 @@ import { readersService } from "../services/readers.service";
 import {
   AddBookInput,
   AddPublishingHouseInput,
-  AddReaderInput,
+  ReaderInput,
   GetAllBooksInput,
   GetAllReadersInput,
   RemoveBookInput,
   RemovePublishingHouseInput,
   RemoveReaderInput,
+  UpdateReaderInput,
 } from "./types";
 
 export const resolvers = {
@@ -112,7 +113,7 @@ export const resolvers = {
         };
       }
     },
-    addReader: async (_: unknown, variables: AddReaderInput) => {
+    addReader: async (_: unknown, variables: ReaderInput) => {
       try {
         const reader = await readersService.addReader(variables);
         return {
@@ -122,6 +123,25 @@ export const resolvers = {
           },
         };
       } catch {
+        return {
+          result: {
+            status: "ERROR",
+          },
+        };
+      }
+    },
+    updateReader: async (_: unknown, variables: UpdateReaderInput) => {
+      try {
+        console.log({ variables });
+        const reader = await readersService.updateReader(variables);
+        return {
+          reader,
+          result: {
+            status: "OK",
+          },
+        };
+      } catch (error) {
+        console.log(error);
         return {
           result: {
             status: "ERROR",

@@ -110,6 +110,20 @@ export const typeDefs = gql`
     result: ResultStatus
   }
 
+  type UpdateReaderInput {
+    id: String
+    name: String
+    birthDate: String
+    phoneNumber: String
+    author: String
+    address: String
+  }
+
+  type UpdateReaderOutput {
+    reader: Reader
+    result: ResultStatus
+  }
+
   type RemoveReaderInput {
     id: String
   }
@@ -140,6 +154,13 @@ export const typeDefs = gql`
       birthDate: String
       phoneNumber: String
     ): AddReaderOutput
+    updateReader(
+      id: String
+      name: String
+      address: String
+      birthDate: String
+      phoneNumber: String
+    ): UpdateReaderOutput
     removeReader(id: String): RemoveReaderOutput
   }
 `;
