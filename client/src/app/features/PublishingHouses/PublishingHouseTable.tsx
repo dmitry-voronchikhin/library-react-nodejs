@@ -96,6 +96,8 @@ export const PublishingHouseTable: FC = observer(() => {
       </Table>
       <Modal
         open={!!removedPHInfo}
+        okText="ОК"
+        cancelText="Отменить"
         onCancel={() => setRemovedPHInfo(null)}
         onOk={() => {
           removedPHInfo && removePublishingHouse(removedPHInfo.id);

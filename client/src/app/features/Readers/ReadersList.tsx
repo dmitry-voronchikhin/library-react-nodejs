@@ -118,6 +118,8 @@ export const ReadersList: FC = observer(() => {
       />
       <Modal
         open={!!removedReaderInfo}
+        okText="ОК"
+        cancelText="Отменить"
         onCancel={() => setRemovedReaderInfo(null)}
         onOk={() => {
           removedReaderInfo && removeReader(removedReaderInfo.id);

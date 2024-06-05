@@ -106,6 +106,8 @@ export const BooksTable: FC = observer(() => {
       </Table>
       <Modal
         open={!!removedBookInfo}
+        okText="ОК"
+        cancelText="Отменить"
         onCancel={() => setRemovedBookInfo(null)}
         onOk={() => {
           removedBookInfo && removeBook(removedBookInfo.id);
