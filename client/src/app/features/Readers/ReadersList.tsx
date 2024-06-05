@@ -109,10 +109,11 @@ export const ReadersList: FC = observer(() => {
                 <>
                   Дата рождения: {item.birthDate} <br />
                   Тел. {item.phoneNumber}
+                  <br />
+                  Адрес: {item.address}
                 </>
               }
             />
-            <div>{item.address}</div>
           </List.Item>
         )}
       />
