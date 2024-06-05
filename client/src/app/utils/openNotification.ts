@@ -14,5 +14,6 @@ export const openNotification = ({
     message: title,
     description,
     type: type || 'info',
+    closable: false,
   });
 };

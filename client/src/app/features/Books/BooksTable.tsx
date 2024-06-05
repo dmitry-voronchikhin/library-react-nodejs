@@ -108,6 +108,7 @@ export const BooksTable: FC = observer(() => {
         open={!!removedBookInfo}
         okText="ОК"
         cancelText="Отменить"
+        closable={false}
         onCancel={() => setRemovedBookInfo(null)}
         onOk={() => {
           removedBookInfo && removeBook(removedBookInfo.id);

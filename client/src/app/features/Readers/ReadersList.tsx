@@ -72,6 +72,7 @@ export const ReadersList: FC = observer(() => {
         renderItem={(item) => (
           <List.Item
             key={item.id}
+            className={styles.ListItem}
             actions={[
               item.actions.includes('EDIT') && (
                 <Button
@@ -121,6 +122,7 @@ export const ReadersList: FC = observer(() => {
         open={!!removedReaderInfo}
         okText="ОК"
         cancelText="Отменить"
+        closable={false}
         onCancel={() => setRemovedReaderInfo(null)}
         onOk={() => {
           removedReaderInfo && removeReader(removedReaderInfo.id);
@@ -133,11 +135,13 @@ export const ReadersList: FC = observer(() => {
           }?`}
         </span>
       </Modal>
-      <EditReaderModal
-        isOpen={!!readerInfo}
-        onClose={() => setReaderInfo(null)}
-        reader={readerInfo || {}}
-      />
+      {!!readerInfo && (
+        <EditReaderModal
+          isOpen
+          onClose={() => setReaderInfo(null)}
+          reader={readerInfo || {}}
+        />
+      )}
     </>
   );
 });

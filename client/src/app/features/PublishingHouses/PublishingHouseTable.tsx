@@ -98,6 +98,7 @@ export const PublishingHouseTable: FC = observer(() => {
         open={!!removedPHInfo}
         okText="ОК"
         cancelText="Отменить"
+        closable={false}
         onCancel={() => setRemovedPHInfo(null)}
         onOk={() => {
           removedPHInfo && removePublishingHouse(removedPHInfo.id);
