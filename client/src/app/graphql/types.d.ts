@@ -102,6 +102,7 @@ export type Mutation = {
   removeBook?: Maybe<RemoveBookOutput>;
   removePublishingHouse?: Maybe<RemovePublishingHouseOutput>;
   removeReader?: Maybe<RemoveReaderOutput>;
+  updateReader?: Maybe<UpdateReaderOutput>;
 };
 
 export type MutationAddBookArgs = {
@@ -132,6 +133,14 @@ export type MutationRemovePublishingHouseArgs = {
 
 export type MutationRemoveReaderArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationUpdateReaderArgs = {
+  address?: InputMaybe<Scalars['String']>;
+  birthDate?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  phoneNumber?: InputMaybe<Scalars['String']>;
 };
 
 export type PublishingHouse = {
@@ -210,6 +219,22 @@ export const enum ResultStatusEnum {
   Error = 'ERROR',
   Ok = 'OK',
 }
+
+export type UpdateReaderInput = {
+  __typename?: 'UpdateReaderInput';
+  address?: Maybe<Scalars['String']>;
+  author?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  phoneNumber?: Maybe<Scalars['String']>;
+};
+
+export type UpdateReaderOutput = {
+  __typename?: 'UpdateReaderOutput';
+  reader?: Maybe<Reader>;
+  result?: Maybe<ResultStatus>;
+};
 
 export type AddBookMutationVariables = Exact<{
   name?: InputMaybe<Scalars['String']>;
@@ -319,6 +344,26 @@ export type RemoveReaderMutation = {
   __typename?: 'Mutation';
   removeReader?: {
     __typename?: 'RemoveReaderOutput';
+    reader?: { __typename?: 'Reader'; name?: string | null } | null;
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
+export type UpdateReaderMutationVariables = Exact<{
+  id?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  address?: InputMaybe<Scalars['String']>;
+  birthDate?: InputMaybe<Scalars['String']>;
+  phoneNumber?: InputMaybe<Scalars['String']>;
+}>;
+
+export type UpdateReaderMutation = {
+  __typename?: 'Mutation';
+  updateReader?: {
+    __typename?: 'UpdateReaderOutput';
     reader?: { __typename?: 'Reader'; name?: string | null } | null;
     result?: {
       __typename?: 'ResultStatus';

@@ -1,4 +1,5 @@
 export type ReaderForm = {
+  id: string;
   name: string | undefined;
   birthDate: string | undefined;
   address: string | undefined;
@@ -8,7 +9,7 @@ export type ReaderForm = {
 export type Action = 'REMOVE' | 'EDIT';
 
 export type DataType = {
-  key: string;
+  id: string;
   name: string;
   birthDate: string;
   address: string;

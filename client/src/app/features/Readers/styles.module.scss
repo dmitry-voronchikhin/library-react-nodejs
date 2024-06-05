@@ -16,3 +16,15 @@
 .List {
   margin-top: 20px;
 }
+
+.UpdateReaderFormContainer {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.SubmitButton {
+  width: 100%;
+}

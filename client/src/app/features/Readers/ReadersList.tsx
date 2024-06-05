@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Reader } from '@app/graphql/types.d';
 import { ErrorResult } from '@app/components/ErrorResult';
 import { EMPTY_STRING } from '@app/constants';
+import { EditReaderModal } from './EditReaderModal';
 import { useGetAllReaders, useRemoveReader } from './hooks';
 import { PAGE_SIZE } from './constants';
 import { DataType } from './types';
@@ -18,6 +19,7 @@ export const ReadersList: FC = observer(() => {
     id: string;
     name: string;
   } | null>(null);
+  const [readerInfo, setReaderInfo] = useState<Reader | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { readers, count, isLoading, error, refetch } = useGetAllReaders({
@@ -32,7 +34,7 @@ export const ReadersList: FC = observer(() => {
   const list: DataType[] = useMemo(
     () =>
       preparedReaders.map(({ id, name, address, birthDate, phoneNumber }) => ({
-        key: id || '',
+        id: id || '',
         name: name || '-',
         address: address || '-',
         birthDate: birthDate || '-',
@@ -69,9 +71,16 @@ export const ReadersList: FC = observer(() => {
         dataSource={list}
         renderItem={(item) => (
           <List.Item
+            key={item.id}
             actions={[
               item.actions.includes('EDIT') && (
-                <Button type="text" disabled={rrLoading}>
+                <Button
+                  type="text"
+                  onClick={() => {
+                    setReaderInfo(item);
+                  }}
+                  disabled={rrLoading}
+                >
                   Редактировать
                 </Button>
               ),
@@ -80,7 +89,7 @@ export const ReadersList: FC = observer(() => {
                   type="text"
                   onClick={(): void =>
                     setRemovedReaderInfo({
-                      id: item.key,
+                      id: item.id,
                       name: item.name,
                     })
                   }
@@ -96,7 +105,12 @@ export const ReadersList: FC = observer(() => {
                 <Avatar src={`https://api.multiavatar.com/${item.name}.svg`} />
               }
               title={item.name}
-              description={`${item.birthDate}, тел. ${item.phoneNumber}`}
+              description={
+                <>
+                  Дата рождения: {item.birthDate} <br />
+                  Тел. {item.phoneNumber}
+                </>
+              }
             />
             <div>{item.address}</div>
           </List.Item>
@@ -116,6 +130,11 @@ export const ReadersList: FC = observer(() => {
           }?`}
         </span>
       </Modal>
+      <EditReaderModal
+        isOpen={!!readerInfo}
+        onClose={() => setReaderInfo(null)}
+        reader={readerInfo || {}}
+      />
     </>
   );
 });
