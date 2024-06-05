@@ -132,7 +132,6 @@ export const resolvers = {
     },
     updateReader: async (_: unknown, variables: UpdateReaderInput) => {
       try {
-        console.log({ variables });
         const reader = await readersService.updateReader(variables);
         return {
           reader,
