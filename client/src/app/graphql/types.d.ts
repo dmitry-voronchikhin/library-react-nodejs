@@ -95,8 +95,7 @@ export type GetAllReadersOutput = {
 };
 
 export type GetBooksByReaderInput = {
-  __typename?: 'GetBooksByReaderInput';
-  readerId?: Maybe<Scalars['String']>;
+  readerId?: InputMaybe<Scalars['String']>;
 };
 
 export type GetBooksByReaderOutput = {
@@ -104,11 +103,22 @@ export type GetBooksByReaderOutput = {
   books?: Maybe<Array<Maybe<Book>>>;
 };
 
+export type IssueBookInput = {
+  bookId?: InputMaybe<Scalars['String']>;
+  readerId?: InputMaybe<Scalars['String']>;
+};
+
+export type IssueBookOutput = {
+  __typename?: 'IssueBookOutput';
+  result?: Maybe<ResultStatus>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
   addPublishingHouse?: Maybe<AddPublishingHouseOutput>;
   addReader?: Maybe<AddReaderOutput>;
+  issueBook?: Maybe<IssueBookOutput>;
   removeBook?: Maybe<RemoveBookOutput>;
   removePublishingHouse?: Maybe<RemovePublishingHouseOutput>;
   removeReader?: Maybe<RemoveReaderOutput>;
@@ -131,6 +141,11 @@ export type MutationAddReaderArgs = {
   birthDate?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationIssueBookArgs = {
+  bookId?: InputMaybe<Scalars['String']>;
+  readerId?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationRemoveBookArgs = {
@@ -316,6 +331,22 @@ export type AddReaderMutation = {
   } | null;
 };
 
+export type IssueBookMutationVariables = Exact<{
+  readerId?: InputMaybe<Scalars['String']>;
+  bookId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type IssueBookMutation = {
+  __typename?: 'Mutation';
+  issueBook?: {
+    __typename?: 'IssueBookOutput';
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
 export type RemoveBookMutationVariables = Exact<{
   id?: InputMaybe<Scalars['String']>;
 }>;
@@ -469,6 +500,7 @@ export type GetBooksByReaderQuery = {
       publishingHouse?: {
         __typename?: 'PublishingHouse';
         name?: string | null;
+        address?: string | null;
       } | null;
     } | null> | null;
   } | null;

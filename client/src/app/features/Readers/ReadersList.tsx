@@ -15,12 +15,13 @@ import { Reader } from '@app/graphql/types.d';
 import { ErrorResult } from '@app/components/ErrorResult';
 import { EMPTY_STRING } from '@app/constants';
 import { EditReaderModal } from './EditReaderModal';
+import { ReaderBooks } from './ReaderBooks';
+import { IssueBookModal } from './IssueBookModal';
 import { useGetAllReaders, useRemoveReader } from './hooks';
 import { PAGE_SIZE } from './constants';
+import { Action } from './types';
 
 import styles from './styles.module.scss';
-import { ReaderBooks } from './ReaderBooks';
-import { Action } from './types';
 
 export const ReadersList: FC = observer(() => {
   const [readerInfo, setReaderInfo] = useState<{
@@ -167,6 +168,12 @@ export const ReadersList: FC = observer(() => {
           isOpen
           onClose={() => setReaderInfo(null)}
           reader={readerInfo.reader || {}}
+        />
+      )}
+      {readerInfo?.action === 'ISSUE_BOOK' && (
+        <IssueBookModal
+          readerId={readerInfo.reader.id || EMPTY_STRING}
+          onCancel={() => setReaderInfo(null)}
         />
       )}
     </>

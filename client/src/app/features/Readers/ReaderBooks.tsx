@@ -32,7 +32,7 @@ export const ReaderBooks: FC<Props> = ({ readerId }) => {
           className={styles.ListItem}
           actions={[
             <Tooltip key="returnBook" title="Вернуть книгу">
-              <Button key="returnBook" type="default">
+              <Button type="default">
                 <RollbackOutlined />
               </Button>
             </Tooltip>,
@@ -43,7 +43,7 @@ export const ReaderBooks: FC<Props> = ({ readerId }) => {
             description={
               <>
                 Автор: {item?.author} <br />
-                {item?.publishingHouse}
+                {item?.publishingHouse?.name}, {item?.publishingHouse?.address}
               </>
             }
           />

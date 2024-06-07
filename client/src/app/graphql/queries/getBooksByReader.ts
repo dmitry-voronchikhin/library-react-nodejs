@@ -9,6 +9,7 @@ export const GET_BOOKS_BY_READER = gql`
         name
         publishingHouse {
           name
+          address
         }
       }
     }

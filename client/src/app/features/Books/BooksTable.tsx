@@ -21,6 +21,7 @@ export const BooksTable: FC = observer(() => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const { books, count, isLoading, error, refetch } = useGetAllBooks({
+    pageSize: PAGE_SIZE,
     currentPage,
   });
   const { removeBook, isLoading: rbLoading } = useRemoveBook();

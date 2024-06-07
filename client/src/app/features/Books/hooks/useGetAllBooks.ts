@@ -6,7 +6,6 @@ import {
   GetAllBooksQuery,
   GetAllBooksQueryVariables,
 } from '@app/graphql/types.d';
-import { PAGE_SIZE } from '../constants';
 
 type Result = {
   books: (Book | null)[];
@@ -18,8 +17,10 @@ type Result = {
 
 export const useGetAllBooks = ({
   currentPage,
+  pageSize,
 }: {
-  currentPage: number;
+  currentPage?: number;
+  pageSize?: number;
 }): Result => {
   const { data, loading, error, refetch } = useQuery<
     GetAllBooksQuery,
@@ -27,7 +28,7 @@ export const useGetAllBooks = ({
   >(GET_ALL_BOOKS, {
     variables: {
       page: currentPage,
-      count: PAGE_SIZE,
+      count: pageSize,
     },
     fetchPolicy: 'cache-first',
   });
