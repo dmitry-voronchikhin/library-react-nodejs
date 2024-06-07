@@ -2,6 +2,7 @@ import {
   AddBookInput,
   GetAllBooksInput,
   GetBooksByReaderInput,
+  IssueBookInput,
   RemoveBookInput,
 } from "../graphql/types";
 import { prisma } from "../prisma";
@@ -45,6 +46,7 @@ class BooksService {
         publishingHouse: {
           select: {
             name: true,
+            address: true,
           },
         },
       },
@@ -61,6 +63,18 @@ class BooksService {
         name,
         publishingHouseId,
         author,
+      },
+    });
+  }
+
+  async issueBook(request: IssueBookInput) {
+    const { readerId, bookId } = request;
+    return await prisma.book.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        readerId,
       },
     });
   }

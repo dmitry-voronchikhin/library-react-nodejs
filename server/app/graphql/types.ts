@@ -13,6 +13,11 @@ export type AddBookInput = {
   author: string;
 };
 
+export type IssueBookInput = {
+  readerId: string;
+  bookId: string;
+};
+
 export type RemoveBookInput = {
   id: string;
 };

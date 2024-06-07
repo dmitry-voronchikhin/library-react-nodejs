@@ -34,12 +34,21 @@ export const typeDefs = gql`
     count: Int
   }
 
-  type GetBooksByReaderInput {
+  input GetBooksByReaderInput {
     readerId: String
   }
 
   type GetBooksByReaderOutput {
     books: [Book]
+  }
+
+  input IssueBookInput {
+    readerId: String
+    bookId: String
+  }
+
+  type IssueBookOutput {
+    result: ResultStatus
   }
 
   input AddBookInput {
@@ -154,6 +163,7 @@ export const typeDefs = gql`
       author: String
       publishingHouseId: String
     ): AddBookOutput
+    issueBook(readerId: String, bookId: String): IssueBookOutput
     removeBook(id: String): RemoveBookOutput
     addPublishingHouse(name: String, address: String): AddPublishingHouseOutput
     removePublishingHouse(id: String): RemovePublishingHouseOutput

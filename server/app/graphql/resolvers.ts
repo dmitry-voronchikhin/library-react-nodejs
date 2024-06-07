@@ -12,6 +12,7 @@ import {
   RemoveReaderInput,
   UpdateReaderInput,
   GetBooksByReaderInput,
+  IssueBookInput,
 } from "./types";
 
 export const resolvers = {
@@ -49,6 +50,22 @@ export const resolvers = {
         const book = await booksService.addBook(variables);
         return {
           book,
+          result: {
+            status: "OK",
+          },
+        };
+      } catch {
+        return {
+          result: {
+            status: "ERROR",
+          },
+        };
+      }
+    },
+    issueBook: async (_: unknown, variables: IssueBookInput) => {
+      try {
+        await booksService.issueBook(variables);
+        return {
           result: {
             status: "OK",
           },
@@ -147,8 +164,7 @@ export const resolvers = {
             status: "OK",
           },
         };
-      } catch (error) {
-        console.log(error);
+      } catch {
         return {
           result: {
             status: "ERROR",
