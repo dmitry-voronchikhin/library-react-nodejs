@@ -94,6 +94,16 @@ export type GetAllReadersOutput = {
   readers?: Maybe<Array<Maybe<Reader>>>;
 };
 
+export type GetBooksByReaderInput = {
+  __typename?: 'GetBooksByReaderInput';
+  readerId?: Maybe<Scalars['String']>;
+};
+
+export type GetBooksByReaderOutput = {
+  __typename?: 'GetBooksByReaderOutput';
+  books?: Maybe<Array<Maybe<Book>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addBook?: Maybe<AddBookOutput>;
@@ -155,6 +165,7 @@ export type Query = {
   getAllBooks?: Maybe<GetAllBooksOutput>;
   getAllPublishingHouses?: Maybe<GetAllPublishingHousesOutput>;
   getAllReaders?: Maybe<GetAllReadersOutput>;
+  getBooksByReader?: Maybe<GetBooksByReaderOutput>;
 };
 
 export type QueryGetAllBooksArgs = {
@@ -165,6 +176,10 @@ export type QueryGetAllBooksArgs = {
 export type QueryGetAllReadersArgs = {
   count?: InputMaybe<Scalars['Int']>;
   page?: InputMaybe<Scalars['Int']>;
+};
+
+export type QueryGetBooksByReaderArgs = {
+  readerId?: InputMaybe<Scalars['String']>;
 };
 
 export type Reader = {
@@ -434,6 +449,27 @@ export type GetAllReadersQuery = {
         id?: string | null;
         name?: string | null;
       } | null> | null;
+    } | null> | null;
+  } | null;
+};
+
+export type GetBooksByReaderQueryVariables = Exact<{
+  readerId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type GetBooksByReaderQuery = {
+  __typename?: 'Query';
+  getBooksByReader?: {
+    __typename?: 'GetBooksByReaderOutput';
+    books?: Array<{
+      __typename?: 'Book';
+      author?: string | null;
+      id?: string | null;
+      name?: string | null;
+      publishingHouse?: {
+        __typename?: 'PublishingHouse';
+        name?: string | null;
+      } | null;
     } | null> | null;
   } | null;
 };

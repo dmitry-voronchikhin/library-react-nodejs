@@ -1,7 +1,14 @@
 import React, { FC, useMemo, useState } from 'react';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
-import { Avatar, Button, List, Modal } from 'antd';
+import { Avatar, Button, List, Modal, Tooltip } from 'antd';
+import {
+  CloseOutlined,
+  EditOutlined,
+  FileAddOutlined,
+  ReadOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 import { Reader } from '@app/graphql/types.d';
@@ -10,16 +17,16 @@ import { EMPTY_STRING } from '@app/constants';
 import { EditReaderModal } from './EditReaderModal';
 import { useGetAllReaders, useRemoveReader } from './hooks';
 import { PAGE_SIZE } from './constants';
-import { DataType } from './types';
 
 import styles from './styles.module.scss';
+import { ReaderBooks } from './ReaderBooks';
+import { Action } from './types';
 
 export const ReadersList: FC = observer(() => {
-  const [removedReaderInfo, setRemovedReaderInfo] = useState<{
-    id: string;
-    name: string;
+  const [readerInfo, setReaderInfo] = useState<{
+    reader: Reader;
+    action: Action;
   } | null>(null);
-  const [readerInfo, setReaderInfo] = useState<Reader | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const { readers, count, isLoading, error, refetch } = useGetAllReaders({
@@ -30,19 +37,6 @@ export const ReadersList: FC = observer(() => {
   const navigate = useNavigate();
 
   const preparedReaders: Reader[] = useMemo(() => compact(readers), [readers]);
-
-  const list: DataType[] = useMemo(
-    () =>
-      preparedReaders.map(({ id, name, address, birthDate, phoneNumber }) => ({
-        id: id || '',
-        name: name || '-',
-        address: address || '-',
-        birthDate: birthDate || '-',
-        phoneNumber: phoneNumber || '-',
-        actions: ['REMOVE', 'EDIT'],
-      })),
-    [preparedReaders],
-  );
 
   if (error) {
     return (
@@ -55,91 +49,124 @@ export const ReadersList: FC = observer(() => {
 
   return (
     <>
-      <List
-        className={styles.List}
-        loading={isLoading}
-        itemLayout="horizontal"
-        pagination={{
-          pageSize: PAGE_SIZE,
-          current: currentPage,
-          hideOnSinglePage: true,
-          total: count,
-          onChange: (page) => {
-            setCurrentPage(page);
-          },
-        }}
-        dataSource={list}
-        renderItem={(item) => (
-          <List.Item
-            key={item.id}
-            className={styles.ListItem}
-            actions={[
-              item.actions.includes('EDIT') && (
-                <Button
-                  type="default"
-                  onClick={() => {
-                    setReaderInfo(item);
-                  }}
-                  disabled={rrLoading}
-                >
-                  Редактировать
-                </Button>
-              ),
-              item.actions.includes('REMOVE') && (
-                <Button
-                  type="default"
-                  onClick={(): void =>
-                    setRemovedReaderInfo({
-                      id: item.id,
-                      name: item.name,
-                    })
-                  }
-                  disabled={rrLoading}
-                >
-                  Удалить
-                </Button>
-              ),
-            ]}
-          >
-            <List.Item.Meta
-              avatar={
-                <Avatar src={`https://api.multiavatar.com/${item.name}.svg`} />
+      <div className={styles.ReadersListWrapper}>
+        <List
+          className={styles.List}
+          loading={isLoading}
+          itemLayout="horizontal"
+          pagination={{
+            pageSize: PAGE_SIZE,
+            current: currentPage,
+            hideOnSinglePage: true,
+            total: count,
+            onChange: (page) => {
+              setCurrentPage(page);
+            },
+          }}
+          dataSource={preparedReaders}
+          renderItem={(item) => (
+            <List.Item
+              key={item.id}
+              className={styles.ListItem}
+              actions={[
+                <Tooltip key="issueBook" title="Выдать книгу">
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      setReaderInfo({ reader: item, action: 'ISSUE_BOOK' });
+                    }}
+                    disabled={rrLoading}
+                  >
+                    <FileAddOutlined />
+                  </Button>
+                </Tooltip>,
+                <Tooltip key="booksList" title="Список выданных книг">
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      setReaderInfo({ reader: item, action: 'BOOKS' });
+                    }}
+                    disabled={rrLoading}
+                  >
+                    <ReadOutlined style={{ width: 15 }} />
+                  </Button>
+                </Tooltip>,
+                <Tooltip key="editReader" title="Редактировать данные читателя">
+                  <Button
+                    type="default"
+                    onClick={() => {
+                      setReaderInfo({ reader: item, action: 'EDIT' });
+                    }}
+                    disabled={rrLoading}
+                  >
+                    <EditOutlined />
+                  </Button>
+                </Tooltip>,
+                <Tooltip key="removeReader" title="Удалить читателя">
+                  <Button
+                    type="default"
+                    onClick={(): void => {
+                      setReaderInfo({ reader: item, action: 'EDIT' });
+                    }}
+                    disabled={rrLoading}
+                  >
+                    <CloseOutlined />
+                  </Button>
+                </Tooltip>,
+              ]}
+              extra={
+                readerInfo?.reader.id === item.id &&
+                readerInfo?.action === 'BOOKS' && (
+                  <RightOutlined style={{ position: 'absolute', right: -51 }} />
+                )
               }
-              title={item.name}
-              description={
-                <>
-                  Дата рождения: {item.birthDate} <br />
-                  Тел. {item.phoneNumber}
-                  <br />
-                  Адрес: {item.address}
-                </>
-              }
-            />
-          </List.Item>
+            >
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={`https://api.multiavatar.com/${item.name}.svg`}
+                  />
+                }
+                title={item.name}
+                description={
+                  <>
+                    Дата рождения: {item.birthDate} <br />
+                    Тел. {item.phoneNumber}
+                    <br />
+                    Адрес: {item.address}
+                  </>
+                }
+              />
+            </List.Item>
+          )}
+        />
+        {readerInfo?.action === 'BOOKS' && (
+          <ReaderBooks readerId={readerInfo?.reader.id || EMPTY_STRING} />
         )}
-      />
+      </div>
       <Modal
-        open={!!removedReaderInfo}
+        open={readerInfo?.action === 'REMOVE'}
         okText="ОК"
         cancelText="Отменить"
         closable={false}
-        onCancel={() => setRemovedReaderInfo(null)}
+        onCancel={() => setReaderInfo(null)}
         onOk={() => {
-          removedReaderInfo && removeReader(removedReaderInfo.id);
-          setRemovedReaderInfo(null);
+          readerInfo?.reader &&
+            removeReader(readerInfo?.reader.id || EMPTY_STRING);
+          setReaderInfo(null);
         }}
       >
         <span>
           {`Вы действительно хотите удалить читателя ${
-            removedReaderInfo?.name || EMPTY_STRING
+            readerInfo?.reader.name || EMPTY_STRING
           }?`}
         </span>
       </Modal>
-      {!!readerInfo && (
+      {readerInfo?.action === 'EDIT' && (
         <EditReaderModal
           isOpen
           onClose={() => setReaderInfo(null)}
-          reader={readerInfo || {}}
+          reader={readerInfo.reader || {}}
         />
       )}
     </>

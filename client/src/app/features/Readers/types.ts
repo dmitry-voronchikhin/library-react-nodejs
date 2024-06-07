@@ -6,7 +6,7 @@ export type ReaderForm = {
   phoneNumber: string | undefined;
 };
 
-export type Action = 'REMOVE' | 'EDIT';
+export type Action = 'REMOVE' | 'EDIT' | 'BOOKS' | 'ISSUE_BOOK';
 
 export type DataType = {
   id: string;

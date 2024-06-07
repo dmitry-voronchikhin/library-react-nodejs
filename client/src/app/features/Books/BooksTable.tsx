@@ -2,6 +2,7 @@ import React, { FC, useMemo, useState } from 'react';
 import { compact } from 'lodash';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 
@@ -93,7 +94,7 @@ export const BooksTable: FC = observer(() => {
                             }
                             disabled={rbLoading}
                           >
-                            X
+                            <CloseOutlined />
                           </Button>
                         )}
                       </>

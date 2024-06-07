@@ -3,6 +3,7 @@ import { compact } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import Skeleton from 'react-loading-skeleton';
 
 import { PublishingHouse } from '@app/graphql/types.d';
@@ -84,7 +85,7 @@ export const PublishingHouseTable: FC = observer(() => {
                           }}
                           disabled={rphLoading}
                         >
-                          X
+                          <CloseOutlined />
                         </Button>
                       )}
                     </>
