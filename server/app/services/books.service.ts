@@ -1,6 +1,7 @@
 import {
   AddBookInput,
   GetAllBooksInput,
+  GetBooksByReaderInput,
   RemoveBookInput,
 } from "../graphql/types";
 import { prisma } from "../prisma";
@@ -26,6 +27,29 @@ class BooksService {
             name: true,
           },
         },
+      },
+      where: {
+        readerId: null,
+      },
+    });
+  }
+
+  async getBooksByReader(request: GetBooksByReaderInput) {
+    const { readerId } = request;
+
+    return await prisma.book.findMany({
+      select: {
+        name: true,
+        author: true,
+        id: true,
+        publishingHouse: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      where: {
+        readerId,
       },
     });
   }

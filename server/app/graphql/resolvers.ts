@@ -11,6 +11,7 @@ import {
   RemovePublishingHouseInput,
   RemoveReaderInput,
   UpdateReaderInput,
+  GetBooksByReaderInput,
 } from "./types";
 
 export const resolvers = {
@@ -22,6 +23,13 @@ export const resolvers = {
       return {
         books,
         count,
+      };
+    },
+    getBooksByReader: async (_: unknown, variables: GetBooksByReaderInput) => {
+      const books = await booksService.getBooksByReader(variables);
+
+      return {
+        books,
       };
     },
     getAllPublishingHouses: publishingHouseService.getAllPublishingHouses,

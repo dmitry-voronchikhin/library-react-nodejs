@@ -3,6 +3,10 @@ export type GetAllBooksInput = {
   count: number;
 };
 
+export type GetBooksByReaderInput = {
+  readerId: string;
+};
+
 export type AddBookInput = {
   name: string;
   publishingHouseId: string;
