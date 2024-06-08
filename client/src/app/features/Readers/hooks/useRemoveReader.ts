@@ -15,7 +15,7 @@ type Result = {
   isLoading: boolean;
 };
 
-export const useRemoveReader = (): Result => {
+export const useRemoveReader = (onComplete: () => void): Result => {
   const [removeReaderRequest, { loading }] = useMutation<
     RemoveReaderMutation,
     RemoveReaderMutationVariables
@@ -30,6 +30,7 @@ export const useRemoveReader = (): Result => {
         refetchQueries: ['getAllReaders'],
         onCompleted: (data) => {
           if (data.removeReader?.result?.status === ResultStatusEnum.Ok) {
+            onComplete();
             openNotification({
               title: EMPTY_STRING,
               description: `Читатель ${
@@ -51,7 +52,7 @@ export const useRemoveReader = (): Result => {
         },
       });
     },
-    [removeReaderRequest],
+    [onComplete, removeReaderRequest],
   );
 
   return {
