@@ -10,14 +10,14 @@ import { IssueBookModal } from './IssueBookModal';
 import { AddReaderModal } from './AddReaderModal';
 import { RemoveReaderModal } from './RemoveReaderModal';
 import { ReadersList } from './ReadersList';
-import { Action } from './types';
+import { ReaderAction } from './types';
 
 import styles from './styles.module.scss';
 
 export const Readers: FC = () => {
   const [readerInfo, setReaderInfo] = useState<{
     reader: Reader | null;
-    action: Action;
+    action: ReaderAction;
   } | null>(null);
 
   const clearReaderInfo = () => {
@@ -41,6 +41,9 @@ export const Readers: FC = () => {
           <ReaderBooks readerId={readerInfo?.reader?.id || EMPTY_STRING} />
         )}
       </div>
+      {readerInfo?.action === 'ADD' && (
+        <AddReaderModal onCancel={clearReaderInfo} />
+      )}
       {readerInfo?.action === 'REMOVE' && (
         <RemoveReaderModal
           reader={readerInfo.reader || {}}
@@ -58,9 +61,6 @@ export const Readers: FC = () => {
           readerId={readerInfo.reader?.id || EMPTY_STRING}
           onCancel={clearReaderInfo}
         />
-      )}
-      {readerInfo?.action === 'ADD' && (
-        <AddReaderModal onCancel={clearReaderInfo} />
       )}
     </>
   );

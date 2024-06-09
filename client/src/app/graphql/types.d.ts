@@ -122,6 +122,7 @@ export type Mutation = {
   removeBook?: Maybe<RemoveBookOutput>;
   removePublishingHouse?: Maybe<RemovePublishingHouseOutput>;
   removeReader?: Maybe<RemoveReaderOutput>;
+  returnBook?: Maybe<ReturnBookOutput>;
   updateReader?: Maybe<UpdateReaderOutput>;
 };
 
@@ -158,6 +159,10 @@ export type MutationRemovePublishingHouseArgs = {
 
 export type MutationRemoveReaderArgs = {
   id?: InputMaybe<Scalars['String']>;
+};
+
+export type MutationReturnBookArgs = {
+  bookId?: InputMaybe<Scalars['String']>;
 };
 
 export type MutationUpdateReaderArgs = {
@@ -249,6 +254,15 @@ export const enum ResultStatusEnum {
   Error = 'ERROR',
   Ok = 'OK',
 }
+
+export type ReturnBookInput = {
+  bookId?: InputMaybe<Scalars['String']>;
+};
+
+export type ReturnBookOutput = {
+  __typename?: 'ReturnBookOutput';
+  result?: Maybe<ResultStatus>;
+};
 
 export type UpdateReaderInput = {
   __typename?: 'UpdateReaderInput';
@@ -391,6 +405,21 @@ export type RemoveReaderMutation = {
   removeReader?: {
     __typename?: 'RemoveReaderOutput';
     reader?: { __typename?: 'Reader'; name?: string | null } | null;
+    result?: {
+      __typename?: 'ResultStatus';
+      status?: ResultStatusEnum | null;
+    } | null;
+  } | null;
+};
+
+export type ReturnBookMutationVariables = Exact<{
+  bookId?: InputMaybe<Scalars['String']>;
+}>;
+
+export type ReturnBookMutation = {
+  __typename?: 'Mutation';
+  returnBook?: {
+    __typename?: 'ReturnBookOutput';
     result?: {
       __typename?: 'ResultStatus';
       status?: ResultStatusEnum | null;

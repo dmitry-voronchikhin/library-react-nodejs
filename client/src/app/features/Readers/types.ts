@@ -6,4 +6,6 @@ export type ReaderForm = {
   phoneNumber: string | undefined;
 };
 
-export type Action = 'ADD' | 'REMOVE' | 'EDIT' | 'BOOKS' | 'ISSUE_BOOK';
+export type ReaderAction = 'ADD' | 'REMOVE' | 'EDIT' | 'BOOKS' | 'ISSUE_BOOK';
+
+export type BookAction = 'RETURN_BOOK';

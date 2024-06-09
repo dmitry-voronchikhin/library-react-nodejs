@@ -51,7 +51,7 @@ export const useIssueBook = (onComplete: () => void): Result => {
         onError: () => {
           openNotification({
             title: WARNING_TITLE,
-            description: 'Произошла ошибка при выдаче книги читателя',
+            description: 'Произошла ошибка при выдаче книги читателю',
             type: 'error',
           });
         },

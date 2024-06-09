@@ -15,19 +15,19 @@ import { Reader } from '@app/graphql/types.d';
 import { ErrorResult } from '@app/components/ErrorResult';
 import { useGetAllReaders } from './hooks';
 import { PAGE_SIZE } from './constants';
-import { Action } from './types';
+import { ReaderAction } from './types';
 
 import styles from './styles.module.scss';
 
 type Props = {
   readerInfo: {
     reader: Reader | null;
-    action: Action;
+    action: ReaderAction;
   } | null;
   setReaderInfo: React.Dispatch<
     React.SetStateAction<{
       reader: Reader | null;
-      action: Action;
+      action: ReaderAction;
     } | null>
   >;
 };
