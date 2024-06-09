@@ -51,6 +51,14 @@ export const typeDefs = gql`
     result: ResultStatus
   }
 
+  input ReturnBookInput {
+    bookId: String
+  }
+
+  type ReturnBookOutput {
+    result: ResultStatus
+  }
+
   input AddBookInput {
     name: String
     publishingHouseId: String
@@ -164,6 +172,7 @@ export const typeDefs = gql`
       publishingHouseId: String
     ): AddBookOutput
     issueBook(readerId: String, bookId: String): IssueBookOutput
+    returnBook(bookId: String): ReturnBookOutput
     removeBook(id: String): RemoveBookOutput
     addPublishingHouse(name: String, address: String): AddPublishingHouseOutput
     removePublishingHouse(id: String): RemovePublishingHouseOutput

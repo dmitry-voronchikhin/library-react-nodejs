@@ -13,6 +13,7 @@ import {
   UpdateReaderInput,
   GetBooksByReaderInput,
   IssueBookInput,
+  ReturnBookInput,
 } from "./types";
 
 export const resolvers = {
@@ -65,6 +66,22 @@ export const resolvers = {
     issueBook: async (_: unknown, variables: IssueBookInput) => {
       try {
         await booksService.issueBook(variables);
+        return {
+          result: {
+            status: "OK",
+          },
+        };
+      } catch {
+        return {
+          result: {
+            status: "ERROR",
+          },
+        };
+      }
+    },
+    returnBook: async (_: unknown, variables: ReturnBookInput) => {
+      try {
+        await booksService.returnBook(variables);
         return {
           result: {
             status: "OK",

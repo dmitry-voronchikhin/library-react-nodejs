@@ -18,6 +18,10 @@ export type IssueBookInput = {
   bookId: string;
 };
 
+export type ReturnBookInput = {
+  bookId: string;
+};
+
 export type RemoveBookInput = {
   id: string;
 };
