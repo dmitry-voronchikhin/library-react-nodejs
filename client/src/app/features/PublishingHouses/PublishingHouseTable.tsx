@@ -29,7 +29,7 @@ export const PublishingHouseTable: FC = observer(() => {
   const navigate = useNavigate();
 
   const preparedPublishingHouses: PublishingHouse[] = useMemo(
-    () => compact(publishingHouses),
+    () => compact(publishingHouses).map((ph) => ({ ...ph, key: ph.id })),
     [publishingHouses],
   );
 
@@ -61,6 +61,7 @@ export const PublishingHouseTable: FC = observer(() => {
               return column.key === 'actions' ? (
                 <>
                   <Button
+                    key="removePHAction"
                     type="text"
                     onClick={(): void => {
                       setRemovedPHInfo({

@@ -13,7 +13,7 @@ export const TABLE_COLUMNS = [
   },
   {
     title: 'Издательство',
-    dataIndex: 'publishingHouse',
+    dataIndex: ['publishingHouse', 'name'],
     key: 'publishingHouse',
   },
   {
@@ -21,6 +21,6 @@ export const TABLE_COLUMNS = [
     dataIndex: 'actions',
     key: 'actions',
   },
-] as const;
+];
 
 export const PAGE_SIZE = 10;
