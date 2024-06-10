@@ -4,10 +4,3 @@ export type PublishingHouseForm = {
 };
 
 export type Action = 'REMOVE';
-
-export type DataType = {
-  key: string;
-  name: string;
-  address: string;
-  actions: Action[];
-};

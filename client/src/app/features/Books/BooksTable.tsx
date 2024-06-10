@@ -10,7 +10,6 @@ import { ErrorResult } from '@app/components/ErrorResult';
 import { EMPTY_STRING } from '@app/constants';
 import { useGetAllBooks, useRemoveBook } from './hooks';
 import { PAGE_SIZE, TABLE_COLUMNS } from './constants';
-import { DataType } from './types';
 
 import styles from './styles.module.scss';
 
@@ -35,18 +34,6 @@ export const BooksTable: FC = observer(() => {
 
   const preparedBooks: Book[] = useMemo(() => compact(books), [books]);
 
-  const dataSource: DataType[] = useMemo(
-    () =>
-      preparedBooks.map(({ id, name, author, publishingHouse }) => ({
-        key: id || '',
-        name: name || '-',
-        author: author || '-',
-        publishingHouse: publishingHouse?.name || '-',
-        actions: ['REMOVE'],
-      })),
-    [preparedBooks],
-  );
-
   if (error) {
     return (
       <ErrorResult
@@ -70,7 +57,7 @@ export const BooksTable: FC = observer(() => {
         </Radio.Group>
       </div>
       <Table
-        dataSource={dataSource}
+        dataSource={preparedBooks}
         pagination={{
           hideOnSinglePage: true,
           current: currentPage,
@@ -90,14 +77,14 @@ export const BooksTable: FC = observer(() => {
               title={column.title}
               dataIndex={column.dataIndex}
               width={72}
-              render={(value: string[], record: DataType) =>
+              render={(value: string[], record: Book) =>
                 column.key === 'actions' ? (
                   <Button
                     type="text"
                     onClick={(): void =>
                       setRemovedBookInfo({
-                        id: record.key,
-                        name: record.name,
+                        id: record.id || EMPTY_STRING,
+                        name: record.name || EMPTY_STRING,
                       })
                     }
                     disabled={rbLoading}

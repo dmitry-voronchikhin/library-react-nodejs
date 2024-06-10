@@ -5,11 +5,3 @@ export type BookForm = {
 };
 
 export type Action = 'REMOVE';
-
-export type DataType = {
-  key: string;
-  name: string;
-  author: string;
-  publishingHouse: string;
-  actions: Action[];
-};
