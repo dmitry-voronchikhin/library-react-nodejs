@@ -1,10 +1,9 @@
 import React, { FC, useMemo, useState } from 'react';
-import { compact } from 'lodash';
 import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { Button, Modal, Table } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
-import Skeleton from 'react-loading-skeleton';
+import compact from 'lodash/compact';
 
 import { PublishingHouse } from '@app/graphql/types.d';
 import { EMPTY_STRING } from '@app/constants';
@@ -48,10 +47,6 @@ export const PublishingHouseTable: FC = observer(() => {
 
   const { Column } = Table;
 
-  if (isPHLoading) {
-    return <Skeleton height={400} />;
-  }
-
   if (phError) {
     return (
       <ErrorResult
@@ -63,35 +58,33 @@ export const PublishingHouseTable: FC = observer(() => {
 
   return (
     <>
-      <Table dataSource={dataSource} scroll={{ y: 450 }}>
+      <Table dataSource={dataSource} scroll={{ y: 450 }} loading={isPHLoading}>
         {TABLE_COLUMNS.map((column) => (
           <Column
             key={column.key}
             title={column.title}
             dataIndex={column.dataIndex}
             width={72}
-            {...(column.key === 'actions'
-              ? {
-                  render: (actions: string[], record: DataType) => (
-                    <>
-                      {actions.includes('REMOVE') && (
-                        <Button
-                          type="text"
-                          onClick={(): void => {
-                            setRemovedPHInfo({
-                              id: record.key,
-                              name: record.name,
-                            });
-                          }}
-                          disabled={rphLoading}
-                        >
-                          <CloseOutlined />
-                        </Button>
-                      )}
-                    </>
-                  ),
-                }
-              : {})}
+            render={(value: string, record: DataType) => {
+              return column.key === 'actions' ? (
+                <>
+                  <Button
+                    type="text"
+                    onClick={(): void => {
+                      setRemovedPHInfo({
+                        id: record.key,
+                        name: record.name,
+                      });
+                    }}
+                    disabled={rphLoading}
+                  >
+                    <CloseOutlined />
+                  </Button>
+                </>
+              ) : (
+                value
+              );
+            }}
           />
         ))}
       </Table>

@@ -1,9 +1,10 @@
 import { Button, Form, Modal, Select } from 'antd';
 import React, { FC, useMemo } from 'react';
 
+import { BooksTypeEnum } from '@app/graphql/types.d';
 import { EMPTY_STRING } from '@app/constants';
 import { useGetAllBooks } from '../Books/hooks';
-import { useIssueBook } from './hooks/useIssueBook';
+import { useIssueBook } from './hooks';
 
 import styles from './styles.module.scss';
 
@@ -15,7 +16,9 @@ type Props = {
 export const IssueBookModal: FC<Props> = ({ readerId, onCancel }) => {
   const [form] = Form.useForm<{ book: string }>();
 
-  const { books, isLoading: booksLoading } = useGetAllBooks({});
+  const { books, isLoading: booksLoading } = useGetAllBooks({
+    type: BooksTypeEnum.NotIssued,
+  });
   const { issueBook, isLoading } = useIssueBook(onCancel);
 
   const selectBookOptions = useMemo(

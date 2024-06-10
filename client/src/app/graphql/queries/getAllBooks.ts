@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_ALL_BOOKS = gql`
-  query getAllBooks($page: Int, $count: Int) {
-    getAllBooks(page: $page, count: $count) {
+  query getAllBooks($page: Int, $count: Int, $type: String) {
+    getAllBooks(page: $page, count: $count, type: $type) {
       books {
         author
         id

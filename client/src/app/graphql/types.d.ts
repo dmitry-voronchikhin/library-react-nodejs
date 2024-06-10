@@ -64,9 +64,16 @@ export type Book = {
   publishingHouse?: Maybe<PublishingHouse>;
 };
 
+export const enum BooksTypeEnum {
+  All = 'ALL',
+  Issued = 'ISSUED',
+  NotIssued = 'NOT_ISSUED',
+}
+
 export type GetAllBooksInput = {
   count?: InputMaybe<Scalars['Int']>;
   page?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Scalars['String']>;
 };
 
 export type GetAllBooksOutput = {
@@ -191,6 +198,7 @@ export type Query = {
 export type QueryGetAllBooksArgs = {
   count?: InputMaybe<Scalars['Int']>;
   page?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryGetAllReadersArgs = {
@@ -450,6 +458,7 @@ export type UpdateReaderMutation = {
 export type GetAllBooksQueryVariables = Exact<{
   page?: InputMaybe<Scalars['Int']>;
   count?: InputMaybe<Scalars['Int']>;
+  type?: InputMaybe<Scalars['String']>;
 }>;
 
 export type GetAllBooksQuery = {

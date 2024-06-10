@@ -3,6 +3,7 @@ import { ApolloError, useQuery } from '@apollo/client';
 import { GET_ALL_BOOKS } from '@app/graphql/queries';
 import {
   Book,
+  BooksTypeEnum,
   GetAllBooksQuery,
   GetAllBooksQueryVariables,
 } from '@app/graphql/types.d';
@@ -18,9 +19,11 @@ type Result = {
 export const useGetAllBooks = ({
   currentPage,
   pageSize,
+  type,
 }: {
   currentPage?: number;
   pageSize?: number;
+  type?: BooksTypeEnum;
 }): Result => {
   const { data, loading, error, refetch } = useQuery<
     GetAllBooksQuery,
@@ -29,6 +32,7 @@ export const useGetAllBooks = ({
     variables: {
       page: currentPage,
       count: pageSize,
+      type,
     },
     fetchPolicy: 'cache-first',
   });

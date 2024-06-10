@@ -4,3 +4,4 @@ export { useRemoveReader } from './useRemoveReader';
 export { useUpdateReader } from './useUpdateReader';
 export { useGetBooksByReader } from './useGetBooksByReader';
 export { useReturnBook } from './useReturnBook';
+export { useIssueBook } from './useIssueBook';
