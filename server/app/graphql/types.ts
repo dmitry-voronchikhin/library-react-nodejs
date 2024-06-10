@@ -1,7 +1,14 @@
 export type GetAllBooksInput = {
   page: number;
   count: number;
+  type: string;
 };
+
+export enum BooksTypeEnum {
+  ALL = "ALL",
+  ISSUED = "ISSUED",
+  NOT_ISSUED = "NOT_ISSUED",
+}
 
 export type GetBooksByReaderInput = {
   readerId: string;

@@ -10,6 +10,12 @@ export const typeDefs = gql`
     status: ResultStatusEnum
   }
 
+  enum BooksTypeEnum {
+    ALL
+    ISSUED
+    NOT_ISSUED
+  }
+
   type Book {
     id: String
     name: String
@@ -26,6 +32,7 @@ export const typeDefs = gql`
   input GetAllBooksInput {
     page: Int
     count: Int
+    type: String
   }
 
   type GetAllBooksOutput {
@@ -159,7 +166,7 @@ export const typeDefs = gql`
   }
 
   type Query {
-    getAllBooks(page: Int, count: Int): GetAllBooksOutput
+    getAllBooks(page: Int, count: Int, type: String): GetAllBooksOutput
     getBooksByReader(readerId: String): GetBooksByReaderOutput
     getAllPublishingHouses: GetAllPublishingHousesOutput
     getAllReaders(page: Int, count: Int): GetAllReadersOutput

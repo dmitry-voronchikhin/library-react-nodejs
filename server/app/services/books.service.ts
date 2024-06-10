@@ -1,5 +1,6 @@
 import {
   AddBookInput,
+  BooksTypeEnum,
   GetAllBooksInput,
   GetBooksByReaderInput,
   IssueBookInput,
@@ -9,11 +10,25 @@ import {
 import { prisma } from "../prisma";
 
 class BooksService {
-  async getAllBooksCount() {
-    return (await prisma.book.findMany()).length;
+  async getAllBooksCount(request: GetAllBooksInput) {
+    return (
+      await prisma.book.findMany({
+        where: {
+          ...(request.type === BooksTypeEnum.ISSUED && {
+            NOT: {
+              readerId: null,
+            },
+          }),
+          ...(request.type === BooksTypeEnum.NOT_ISSUED && {
+            readerId: null,
+          }),
+          ...(request.type === BooksTypeEnum.NOT_ISSUED && {}),
+        },
+      })
+    ).length;
   }
   async getAllBooks(request: GetAllBooksInput) {
-    const { page, count } = request;
+    const { page, count, type } = request;
     return await prisma.book.findMany({
       ...(page &&
         count && {
@@ -31,7 +46,15 @@ class BooksService {
         },
       },
       where: {
-        readerId: null,
+        ...(type === BooksTypeEnum.ISSUED && {
+          NOT: {
+            readerId: null,
+          },
+        }),
+        ...(type === BooksTypeEnum.NOT_ISSUED && {
+          readerId: null,
+        }),
+        ...(type === BooksTypeEnum.NOT_ISSUED && {}),
       },
     });
   }

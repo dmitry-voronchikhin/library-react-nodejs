@@ -20,7 +20,7 @@ export const resolvers = {
   Query: {
     getAllBooks: async (_: unknown, variables: GetAllBooksInput) => {
       const books = await booksService.getAllBooks(variables);
-      const count = await booksService.getAllBooksCount();
+      const count = await booksService.getAllBooksCount(variables);
 
       return {
         books,
